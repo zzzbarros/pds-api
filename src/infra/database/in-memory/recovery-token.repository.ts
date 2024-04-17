@@ -1,0 +1,27 @@
+import { TokenEntity, IRecoveryTokenRepository } from 'src/app/modules/auth';
+
+export class RecoveryTokenInMemoryRepository
+  implements IRecoveryTokenRepository
+{
+  private tokens: TokenEntity[] = [];
+  async findByToken(refreshToken: string): Promise<TokenEntity | null> {
+    const token = this.tokens.find(
+      (token) => token.getToken() === refreshToken,
+    );
+    return token ?? null;
+  }
+
+  async save(token: TokenEntity): Promise<TokenEntity> {
+    this.tokens.push(token);
+    return token;
+  }
+
+  async update(token: TokenEntity): Promise<void> {
+    this.tokens = this.tokens.map((t) => {
+      if (t.getToken() === token.getToken()) {
+        return token;
+      }
+      return t;
+    });
+  }
+}
