@@ -1,17 +1,19 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { CreateUserUseCase } from '../usecases';
 import { CreateUserDto } from '../dtos';
-import type { IBaseResponse } from 'src/app/shared';
+import { IBaseResponse } from 'src/app/shared';
 
 @Controller('users')
 export class UserController {
   constructor(private readonly createUserUseCase: CreateUserUseCase) {}
 
-  @Post()
+  @Post('coach')
   @HttpCode(HttpStatus.OK)
   async create(@Body() body: CreateUserDto): Promise<IBaseResponse> {
     await this.createUserUseCase.execute(body);
-
-    return { message: 'Cadastro efetuado com sucesso' };
+    return {
+      title: 'Cadastro enviado com sucesso!',
+      message: 'Verifique seu email.',
+    };
   }
 }

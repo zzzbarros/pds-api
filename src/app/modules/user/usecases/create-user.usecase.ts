@@ -1,32 +1,44 @@
 import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import { randomUUID } from 'crypto';
 import { CreateUserDto } from '../dtos';
 import { UserEntity } from '../entities';
-import type { IUserRepository } from '../repositories';
-import type { IBaseUseCase } from 'src/app/shared';
-import type { ISecurityRepository } from '../../auth/repositories';
+import { IUserRepository } from '../repositories';
+import { ISecurityRepository } from '../../auth';
+import { IQueueRepository } from '../../queues';
+import { USER_ROLE_ENUM, type BaseUseCase } from 'src/app/shared';
 
 @Injectable()
-export class CreateUserUseCase implements IBaseUseCase {
+export class CreateUserUseCase implements BaseUseCase {
   constructor(
     @Inject('IUserRepository')
-    private readonly userRepository: IUserRepository,
+    private readonly IUserRepository: IUserRepository,
+    @Inject('IQueueRepository')
+    private readonly IQueueRepository: IQueueRepository,
     @Inject('ISecurityRepository')
-    private readonly hashRepository: ISecurityRepository,
+    private readonly securityRepository: ISecurityRepository,
   ) {}
 
   async execute(input: CreateUserDto): Promise<void> {
-    await this.validateEmailUniqueness(input.email);
-    const hashedPassword = await this.hashRepository.hashPassword(
-      input.password,
-    );
-    const user = new UserEntity({ ...input, password: hashedPassword });
-    await this.userRepository.create(user);
+    const { name, email } = input;
+    await this.validateEmailUniqueness(email);
+    const role = USER_ROLE_ENUM.COACH;
+    const password = await this.generatePassword();
+    const user = new UserEntity({ name, email, password, role });
+    await this.IUserRepository.create(user);
+    await this.IQueueRepository.sendMailToQueue({ email, name });
   }
 
   private async validateEmailUniqueness(email: string): Promise<void> {
-    const existingUser = await this.userRepository.findByEmail(email);
+    const existingUser = await this.IUserRepository.findByEmail(email);
     if (existingUser) {
-      throw new ConflictException('Email do usuário já existe');
+      throw new ConflictException({
+        title: 'Não foi possível criar a conta!',
+        message: 'Email do usuário já existe, verifique e tente novamente',
+      });
     }
+  }
+
+  private async generatePassword() {
+    return await this.securityRepository.hashPassword(randomUUID());
   }
 }

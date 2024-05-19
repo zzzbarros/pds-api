@@ -1,18 +1,23 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { CreateUserUseCase } from './usecases';
+import { SendMailJob } from './jobs';
 import { UserController } from './controllers';
-import { SecurityModule, UserInMemoryRepository } from 'src/infra';
+import { QueueModule } from '../queues/queue.module';
+import { MailModule } from '../mail/mail.module';
+import { SecurityModule } from 'src/infra/security/security.module';
+import { UserPostgresRepository } from 'src/infra/databases/orms/prisma/postgres';
 
 @Module({
-  imports: [SecurityModule],
+  imports: [QueueModule, SecurityModule, MailModule],
   controllers: [UserController],
   providers: [
     CreateUserUseCase,
+    SendMailJob,
     {
       provide: 'IUserRepository',
-      useClass: UserInMemoryRepository,
+      useClass: UserPostgresRepository,
     },
   ],
-  exports: ['IUserRepository'],
+  exports: [SendMailJob],
 })
 export class UserModule {}

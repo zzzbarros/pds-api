@@ -1,5 +1,5 @@
 import { IsEmail, IsEnum, IsString, MinLength } from 'class-validator';
-import { UserRole } from 'src/app/shared';
+import { USER_ROLE_ENUM } from 'src/app/shared';
 
 export class CreateUserDto {
   @IsString({ message: 'Nome inválido' })
@@ -8,10 +8,10 @@ export class CreateUserDto {
   @IsEmail({}, { message: 'E-mail inválido' })
   email: string;
 
-  @IsString({ message: 'A senha precisa ser uma string' })
-  @MinLength(8, { message: 'A senha precisa ter no mínimo 8 carácteres.' })
-  password: string;
+  // @IsString({ message: 'A senha precisa ser uma string' })
+  // @MinLength(8, { message: 'A senha precisa ter no mínimo 8 carácteres.' })
+  // password: string;
 
-  @IsEnum(UserRole)
-  role: UserRole;
+  // @IsEnum(USER_ROLE_ENUM)
+  // role?: USER_ROLE_ENUM;
 }
