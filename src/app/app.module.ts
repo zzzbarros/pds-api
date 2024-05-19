@@ -2,7 +2,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthModule, UserModule } from './modules';
+import { PrismaModule } from 'src/infra/databases/orms/prisma/prisma.module';
+import { UserModule } from './modules/user/user.module';
+import { QueueModule } from './modules/queues/queue.module';
+import { ScheduleModule } from './modules/schedule/cron.module';
+import { SecurityModule } from 'src/infra/security/security.module';
+import { MailModule } from './modules/mail/mail.module';
 
 @Module({
   imports: [
@@ -10,8 +15,12 @@ import { AuthModule, UserModule } from './modules';
       isGlobal: true,
       envFilePath: './.env',
     }),
-    AuthModule,
+    QueueModule,
     UserModule,
+    PrismaModule,
+    SecurityModule,
+    ScheduleModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

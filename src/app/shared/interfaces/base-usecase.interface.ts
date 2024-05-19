@@ -1,3 +1,3 @@
-export interface IBaseUseCase {
+export interface BaseUseCase {
   execute(input?: any): any;
 }
