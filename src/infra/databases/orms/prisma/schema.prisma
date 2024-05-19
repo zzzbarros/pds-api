@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  uuid        String   @unique() @default(uuid()) @db.Uuid()
+  name        String   @db.VarChar(255)
+  email       String   @unique @db.VarChar(255)
+  password    String   @db.VarChar(255)
+  role        String   @db.VarChar(255)
+  isEnabled   Boolean  @default(true) @map("is_enabled")
+  firstAccess Boolean  @default(false) @map("first_access")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  tokens      Token[]
+  coach       Coach?
+
+  @@map("users")
+}
+
+model Token {
+  id        Int      @id @default(autoincrement())
+  uuid      String   @unique() @default(uuid()) @db.Uuid()
+  type      String   @db.VarChar(50)
+  token     String   @db.VarChar(255)
+  expiresIn DateTime @map("expires_in")
+  isValid   Boolean  @default(true) @map("is_valid")
+  userId    Int      @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("tokens")
+}
+
+model Coach {
+  id          Int      @id @default(autoincrement())
+  uuid        String   @unique() @default(uuid()) @db.Uuid()
+  name        String   @db.VarChar(255)
+  email       String   @unique @db.VarChar(255)
+  userId      Int      @unique()
+  user        User     @relation(fields: [userId], references: [id])
+  isEnabled   Boolean  @default(true) @map("is_enabled")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("coaches")
+}
