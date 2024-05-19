@@ -1,5 +1,7 @@
+import { Injectable } from '@nestjs/common';
 import { TokenEntity, IRecoveryTokenRepository } from 'src/app/modules/auth';
 
+@Injectable()
 export class RecoveryTokenInMemoryRepository
   implements IRecoveryTokenRepository
 {

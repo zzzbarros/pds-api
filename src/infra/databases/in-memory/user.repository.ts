@@ -1,6 +1,9 @@
+import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import { IUserRepository, UserEntity } from 'src/app/modules/user';
+import { UserEntity } from 'src/app/modules/user';
+import { IUserRepository } from 'src/app/modules/user/repositories';
 
+@Injectable()
 export class UserInMemoryRepository implements IUserRepository {
   private users: UserEntity[] = [];
   private ids = 1;

@@ -1,5 +1,7 @@
+import { Injectable } from '@nestjs/common';
 import { TokenEntity, IRefreshTokenRepository } from 'src/app/modules/auth';
 
+@Injectable()
 export class RefreshTokenInMemoryRepository implements IRefreshTokenRepository {
   private tokens: TokenEntity[] = [];
   async findByToken(refreshToken: string): Promise<TokenEntity | null> {
