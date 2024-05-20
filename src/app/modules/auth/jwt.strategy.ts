@@ -20,7 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 
   public async validate(payload: JwtRequestPayloadDto) {
     const { userId } = await this.validateJwt(payload);
-    const user = await this.userRepository.findByUuid(userId);
+    const user = await this.userRepository.findById(userId);
 
     if (!user) {
       const message = 'Não autorizado!';

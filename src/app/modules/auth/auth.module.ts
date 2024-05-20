@@ -1,23 +1,26 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt.strategy';
-import { UserModule } from '../user';
+import { UserModule } from '../user/user.module';
 import {
+  CreatePasswordUseCase,
   GenerateAccessTokenUseCase,
   GenerateRefreshTokenUseCase,
   LoginUseCase,
 } from './usecases';
 import { AuthController } from './controllers';
+import { SecurityModule } from 'src/infra/security/security.module';
 import {
-  RefreshTokenInMemoryRepository,
-  RecoveryTokenInMemoryRepository,
-  SecurityModule,
-} from 'src/infra';
+  RecoveryTokenPostgresRepository,
+  RefreshTokenPostgresRepository,
+} from 'src/infra/databases/orms/prisma/postgres';
 
 @Module({
   controllers: [AuthController],
   imports: [
+    forwardRef(() => UserModule),
+    forwardRef(() => SecurityModule),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (config: ConfigService) => ({
@@ -25,22 +28,22 @@ import {
       }),
       inject: [ConfigService],
     }),
-    SecurityModule,
-    UserModule,
   ],
   providers: [
+    CreatePasswordUseCase,
     GenerateAccessTokenUseCase,
     GenerateRefreshTokenUseCase,
     JwtStrategy,
     LoginUseCase,
     {
       provide: 'IRefreshTokenRepository',
-      useClass: RefreshTokenInMemoryRepository,
+      useClass: RefreshTokenPostgresRepository,
     },
     {
       provide: 'IRecoveryTokenRepository',
-      useClass: RecoveryTokenInMemoryRepository,
+      useClass: RecoveryTokenPostgresRepository,
     },
   ],
+  exports: ['IRecoveryTokenRepository'],
 })
 export class AuthModule {}

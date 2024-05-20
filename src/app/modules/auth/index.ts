@@ -1,7 +1,6 @@
 export * from './guards';
-export * from './auth.module';
-export { TokenEntity } from './entities';
-export type {
+export * from './entities';
+export {
   IRefreshTokenRepository,
   IRecoveryTokenRepository,
   ISecurityRepository,
