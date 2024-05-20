@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from 'src/infra/databases/orms/prisma/prisma.module';
@@ -14,6 +15,10 @@ import { MailModule } from './modules/mail/mail.module';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: './.env',
+    }),
+    EventEmitterModule.forRoot({
+      wildcard: true,
+      global: true,
     }),
     QueueModule,
     UserModule,
