@@ -12,24 +12,28 @@ export class MailActionsRepository implements IMailRepository {
     private readonly configService: ConfigService,
   ) {}
 
-  public async sendMail(mailBody: SendMailDto): Promise<void> {
+  public async sendMail({
+    email,
+    name,
+    token,
+    expiresIn,
+  }: SendMailDto): Promise<void> {
     const template = this.getTemplate();
 
-    // TODO:
     const htmlToSend = template({
       title: 'Bem-vindo!',
-      username: 'José Barros',
+      username: name,
       message:
         'Você acabou de ser cadastrado como usuário em nossa plataforma!',
       description: 'Clique no botão abaixo para definir sua senha de acesso.',
       buttonText: 'Definir senha',
-      urlButton: `/criar-nova-senha/token-123-123123-3123-uiuiu`,
-      expirationToken: '24',
+      urlButton: this.configService.get('CREATE_PASSWORD_URL').concat(token),
+      expirationToken: expiresIn,
     });
 
     const response = await this.mailerService.sendMail({
-      to: mailBody.email,
-      subject: mailBody.subject,
+      to: email,
+      subject: 'Definir Senha',
       html: htmlToSend,
       headers: {
         ['Authorization']: this.configService.get('MAIL_TOKEN'),
@@ -87,6 +91,9 @@ export class MailActionsRepository implements IMailRepository {
                                 border-radius: 6px;
                                 font-weight: bold;
                                 text-align: center;
+                            }
+                            .button:hover {
+                                background-color: #624F96;
                             }
                             .linkExpiration {
                                 margin-top: 24px;

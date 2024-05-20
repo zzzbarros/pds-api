@@ -1,4 +1,6 @@
 export class SendMailDto {
   email: string;
-  subject: string;
+  name: string;
+  token: string;
+  expiresIn: number;
 }
