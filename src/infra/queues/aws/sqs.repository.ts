@@ -34,9 +34,24 @@ export class QueueSQSRepository implements IQueueRepository {
         QueueUrl: this.url,
       }).promise();
       const [message] = response.Messages;
-      return { id: message.MessageId, body: JSON.parse(message.Body) };
+      return {
+        id: message.MessageId,
+        body: JSON.parse(message.Body),
+        receiptHandle: message.ReceiptHandle,
+      };
     } catch (error) {
       this.onError();
+    }
+  }
+
+  async removeMessage(receiptHandle: string): Promise<void> {
+    try {
+      await this.SQS.deleteMessage({
+        QueueUrl: this.url,
+        ReceiptHandle: receiptHandle,
+      }).promise();
+    } catch (error) {
+      console.log('Error ao deletar mensagem da fila');
     }
   }
 
