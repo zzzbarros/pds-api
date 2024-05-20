@@ -1,4 +1,4 @@
-export enum TokenType {
-    refresh = 'refresh',
-    recovery = 'recovery',
+export enum TokenTypeEnum {
+  refresh = 'refresh',
+  recovery = 'recovery',
 }
