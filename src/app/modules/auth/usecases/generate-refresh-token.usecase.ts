@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { AuthTransformer } from '../transformers/auth.transformer';
-import { TokenType, type IBaseUseCase } from 'src/app/shared';
-import type { IRefreshTokenRepository } from '../repositories/refresh-token.repository';
+import { TokenTypeEnum, type IBaseUseCase } from 'src/app/shared';
+import { IRefreshTokenRepository } from '../repositories/refresh-token.repository';
 
 @Injectable()
 export class GenerateRefreshTokenUseCase implements IBaseUseCase {
@@ -10,12 +10,12 @@ export class GenerateRefreshTokenUseCase implements IBaseUseCase {
     private readonly tokenRepository: IRefreshTokenRepository,
   ) {}
 
-  public async execute(userId: string): Promise<string> {
+  public async execute(userId: number): Promise<string> {
     await this.tokenRepository.invalidateTokensByUserId(userId);
 
     const tokenEntity = AuthTransformer.toTokenEntity(
       userId,
-      TokenType.refresh,
+      TokenTypeEnum.refresh,
     );
 
     const token = await this.tokenRepository.save(tokenEntity);

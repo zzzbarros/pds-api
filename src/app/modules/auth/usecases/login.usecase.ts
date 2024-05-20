@@ -5,9 +5,10 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { LoginRequestDto } from '../dtos';
-import { UserEntity, type IUserRepository } from '../../user';
-import type { IBaseUseCase } from 'src/app/shared';
-import type { ISecurityRepository } from '../repositories';
+import { UserEntity } from '../../user';
+import { IBaseUseCase } from 'src/app/shared';
+import { ISecurityRepository } from '../repositories';
+import { IUserRepository } from '../../user/repositories';
 
 @Injectable()
 export class LoginUseCase implements IBaseUseCase {
@@ -18,14 +19,17 @@ export class LoginUseCase implements IBaseUseCase {
     private readonly hashRepository: ISecurityRepository,
   ) {}
 
-  public async execute(input: LoginRequestDto): Promise<UserEntity> {
-    const user = await this.validateUser(input);
-    await this.validatePassword(input.password, user.getPassword());
+  public async execute({
+    email,
+    password,
+  }: LoginRequestDto): Promise<UserEntity> {
+    const user = await this.validateUser(email);
+    await this.validatePassword(password, user.getPassword());
 
     return user;
   }
 
-  private async validateUser({ email }: LoginRequestDto) {
+  private async validateUser(email: string) {
     const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
@@ -41,12 +45,17 @@ export class LoginUseCase implements IBaseUseCase {
     return user;
   }
 
-  private async validatePassword(input: string, hashed: string) {
-    const valid = await this.hashRepository.comparePasswords(input, hashed);
+  private async validatePassword(password: string, hashedPassword: string) {
+    const valid = await this.hashRepository.comparePasswords(
+      password,
+      hashedPassword,
+    );
 
     if (!valid) {
-      const message = 'Credenciais inválidas!';
-      throw new BadRequestException(message);
+      throw new BadRequestException({
+        title: 'Não foi possível fazer o login!',
+        message: 'Credenciais inválidas.',
+      });
     }
   }
 }
