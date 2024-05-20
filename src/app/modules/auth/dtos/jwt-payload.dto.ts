@@ -1,6 +1,6 @@
-import { UserRole } from 'src/app/shared';
+import { UserRoleEnum } from 'src/app/shared';
 
 export interface JwtPayloadDto {
-  userId: string;
-  type: UserRole;
+  userId: number;
+  type: UserRoleEnum;
 }

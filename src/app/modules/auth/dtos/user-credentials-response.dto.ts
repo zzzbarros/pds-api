@@ -1,8 +1,8 @@
-import { UserRole } from 'src/app/shared';
+import { UserRoleEnum } from 'src/app/shared';
 
 class UserLoginResponse {
   name: string;
-  type: UserRole;
+  type: UserRoleEnum;
   uuid: string;
 }
 
