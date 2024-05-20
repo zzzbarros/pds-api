@@ -1,32 +1,34 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { LoginRequestDto, LoginResponseDto } from '../dtos';
+import { CreatePasswordDto, LoginRequestDto, LoginResponseDto } from '../dtos';
 import {
   GenerateRefreshTokenUseCase,
   GenerateAccessTokenUseCase,
   LoginUseCase,
+  CreatePasswordUseCase,
 } from '../usecases';
+import { IBaseResponse } from 'src/app/shared';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly loginUseCase: LoginUseCase,
+    private readonly createPasswordUseCase: CreatePasswordUseCase,
     private readonly generateRefreshToken: GenerateRefreshTokenUseCase,
     private readonly generateAccessToken: GenerateAccessTokenUseCase,
   ) {}
 
-  @Post()
+  @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() body: LoginRequestDto): Promise<LoginResponseDto> {
     const user = await this.loginUseCase.execute(body);
 
-    const refreshToken = await this.generateRefreshToken.execute(
-      user.getUuid(),
-    );
-
-    const token = await this.generateAccessToken.execute({
-      type: user.getRole(),
-      userId: user.getUuid(),
-    });
+    const [token, refreshToken] = await Promise.all([
+      this.generateAccessToken.execute({
+        type: user.getRole(),
+        userId: user.getId(),
+      }),
+      this.generateRefreshToken.execute(user.getId()),
+    ]);
 
     return {
       token,
@@ -36,6 +38,18 @@ export class AuthController {
         uuid: user.getUuid(),
         type: user.getRole(),
       },
+    };
+  }
+
+  @Post('create-password')
+  @HttpCode(HttpStatus.OK)
+  async createPassword(
+    @Body() body: CreatePasswordDto,
+  ): Promise<IBaseResponse> {
+    await this.createPasswordUseCase.execute(body);
+    return {
+      title: 'Senha cadastrada com sucesso!',
+      message: 'Acesse a plataforma...',
     };
   }
 }
