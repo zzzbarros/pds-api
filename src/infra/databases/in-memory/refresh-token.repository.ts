@@ -11,10 +11,10 @@ export class RefreshTokenInMemoryRepository implements IRefreshTokenRepository {
     return token ?? null;
   }
 
-  async invalidateTokensByUserId(userId: string): Promise<void> {
+  async invalidateTokensByUserId(userId: number): Promise<void> {
     this.tokens = this.tokens.map((token) => {
       if (token.getUserId() === userId) {
-        token.setIsValid(false);
+        token.invalid();
       }
       return token;
     });
