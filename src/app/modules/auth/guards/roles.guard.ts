@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { UserEntity } from '../../user/entities/user.entity';
-import { UserRole, rolesGuardMetaData } from 'src/app/shared';
+import { UserRoleEnum, rolesGuardMetaData } from 'src/app/shared';
 
 @Injectable()
 export class RolesGuard extends AuthGuard('jwt') implements CanActivate {
@@ -10,12 +10,12 @@ export class RolesGuard extends AuthGuard('jwt') implements CanActivate {
     super();
   }
 
-  private matchRoles(roles: string[], userRole: string) {
-    return roles.includes(userRole);
+  private matchRoles(roles: string[], UserRoleEnum: string) {
+    return roles.includes(UserRoleEnum);
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const roles = this.reflector.get<UserRole[]>(
+    const roles = this.reflector.get<UserRoleEnum[]>(
       rolesGuardMetaData,
       context.getHandler(),
     );
@@ -24,8 +24,8 @@ export class RolesGuard extends AuthGuard('jwt') implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
     const user: UserEntity = request.user;
-    const userRole = user.getRole();
+    const UserRoleEnum = user.getRole();
 
-    return this.matchRoles(roles, userRole);
+    return this.matchRoles(roles, UserRoleEnum);
   }
 }
