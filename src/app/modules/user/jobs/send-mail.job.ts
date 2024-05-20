@@ -13,15 +13,7 @@ export class SendMailJob {
 
   async execute(): Promise<void> {
     // const message = await this.queueRepository.receiveMailFromQueue();
-    const message = {
-      id: 'IHU123444',
-      body: { email: 'doublezbarros@gmail.com', name: 'José' },
-    };
-    console.log(message);
-    await this.mailRepository.sendMail({
-      email: message.body.email,
-      subject: message.body.name,
-    });
-    console.log(message);
+    // console.log(message);
+    // await this.mailRepository.sendMail({});
   }
 }
