@@ -1,9 +1,9 @@
-import { BaseEntity, USER_ROLE_ENUM, transformer } from 'src/app/shared';
+import { BaseEntity, UserRoleEnum, transformer } from 'src/app/shared';
 interface IUserConstructor {
   name: string;
   email: string;
   password: string;
-  role: USER_ROLE_ENUM | string;
+  role: UserRoleEnum | string;
   isEnabled?: boolean;
   firstAccess?: boolean;
   id?: number;
@@ -19,7 +19,7 @@ export class UserEntity extends BaseEntity {
   private name: string;
   private email: string;
   private password: string;
-  private role: USER_ROLE_ENUM;
+  private role: UserRoleEnum;
   private isEnabled = true;
   private firstAccess = false;
 
@@ -39,9 +39,18 @@ export class UserEntity extends BaseEntity {
     this.name = transformer.nameToTitleCase(name);
     this.email = email;
     this.password = password;
-    this.role = role as USER_ROLE_ENUM;
+    this.role = role as UserRoleEnum;
     this.isEnabled = isEnabled;
     this.firstAccess = firstAccess;
+  }
+
+  public updatePassword(newPassword: string) {
+    this.password = newPassword;
+
+    if (this.firstAccess) {
+      this.isEnabled = true;
+      this.firstAccess = false;
+    }
   }
 
   public getName(): string {
@@ -64,7 +73,7 @@ export class UserEntity extends BaseEntity {
     return this.firstAccess;
   }
 
-  public getRole(): USER_ROLE_ENUM {
+  public getRole(): UserRoleEnum {
     return this.role;
   }
 }
