@@ -9,6 +9,7 @@ import { QueueModule } from './modules/queues/queue.module';
 import { ScheduleModule } from './modules/schedule/cron.module';
 import { SecurityModule } from 'src/infra/security/security.module';
 import { MailModule } from './modules/mail/mail.module';
+import { AthleteModule } from './modules/athlete/athlete.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { MailModule } from './modules/mail/mail.module';
     SecurityModule,
     ScheduleModule,
     MailModule,
+    AthleteModule,
   ],
   controllers: [AppController],
   providers: [AppService],
