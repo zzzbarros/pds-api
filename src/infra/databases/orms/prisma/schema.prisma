@@ -52,3 +52,18 @@ model Coach {
 
   @@map("coaches")
 }
+
+model Athlete {
+  id          Int      @id @default(autoincrement())
+  uuid        String   @unique() @default(uuid()) @db.Uuid()
+  name        String   @db.VarChar(255)
+  email       String   @unique @db.VarChar(255)
+  birthday    DateTime 
+  weight      Float? 
+  height      Float?
+  isEnabled   Boolean  @default(true) @map("is_enabled")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("athletes")
+}
