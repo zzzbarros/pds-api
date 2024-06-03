@@ -67,3 +67,14 @@ model Athlete {
 
   @@map("athletes")
 }
+
+model TrainingType {
+  id          Int      @id @default(autoincrement())
+  uuid        String   @unique() @default(uuid()) @db.Uuid()
+  name        String   @db.VarChar(255)
+  isEnabled   Boolean  @default(true) @map("is_enabled")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("training-types")
+}

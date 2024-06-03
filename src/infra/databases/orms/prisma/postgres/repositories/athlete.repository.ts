@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaPGService } from '../prisma-pg.service';
 import { AthleteEntity, IAthleteRepository } from 'src/app/modules/athlete';
+import { PaginateRequestDto } from 'src/app/shared';
 
 @Injectable()
 export class AthletePostgresRepository implements IAthleteRepository {
@@ -25,5 +26,34 @@ export class AthletePostgresRepository implements IAthleteRepository {
     });
     if (!athlete) return null;
     return new AthleteEntity(athlete);
+  }
+
+  async findAll({
+    page = 1,
+    size = 10,
+    search,
+  }: PaginateRequestDto): Promise<AthleteEntity[]> {
+    const athletes = await this.prismaService.athlete.findMany({
+      take: size,
+      skip: (page - 1) * size,
+      ...(search && {
+        where: {
+          name: { contains: search },
+          OR: [{ email: { contains: search } }],
+        },
+      }),
+    });
+    return athletes.map((athlete) => new AthleteEntity(athlete));
+  }
+
+  async count({ search }: Pick<PaginateRequestDto, 'search'>): Promise<number> {
+    return await this.prismaService.athlete.count({
+      ...(search && {
+        where: {
+          name: { contains: search },
+          OR: [{ email: { contains: search } }],
+        },
+      }),
+    });
   }
 }
