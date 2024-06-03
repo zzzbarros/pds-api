@@ -90,6 +90,6 @@
     "testEnvironment": "node"
   },
   "prisma": {
-    "schema": "src/infra/databases/orms/prisma/postgres/schema.prisma"
+    "schema": "src/infra/databases/orms/prisma/schema.prisma"
   }
 }
