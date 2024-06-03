@@ -10,6 +10,7 @@ import { ScheduleModule } from './modules/schedule/cron.module';
 import { SecurityModule } from 'src/infra/security/security.module';
 import { MailModule } from './modules/mail/mail.module';
 import { AthleteModule } from './modules/athlete/athlete.module';
+import { TrainingTypeModule } from './modules/training-type/training-type.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { AthleteModule } from './modules/athlete/athlete.module';
     ScheduleModule,
     MailModule,
     AthleteModule,
+    TrainingTypeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
