@@ -19,7 +19,7 @@ export class TrainingTypePostgresRepository implements ITrainingTypeRepository {
     });
   }
 
-  async findAll({
+  async list({
     page = 1,
     size = 10,
     search,
@@ -46,5 +46,26 @@ export class TrainingTypePostgresRepository implements ITrainingTypeRepository {
         },
       }),
     });
+  }
+
+  async findByUuid(uuid: string): Promise<TrainingTypeEntity | null> {
+    const trainingType = await this.prismaService.trainingType.findUnique({
+      where: { uuid },
+    });
+    if (!trainingType) return null;
+    return new TrainingTypeEntity(trainingType);
+  }
+
+  async findAll(options?: {
+    isEnabled: boolean;
+  }): Promise<TrainingTypeEntity[]> {
+    const query = {
+      ...(options && { where: { isEnabled: options.isEnabled } }),
+    };
+    const trainingTypes = await this.prismaService.trainingType.findMany(query);
+    if (!trainingTypes.length) return [];
+    return trainingTypes.map(
+      (trainingType) => new TrainingTypeEntity(trainingType),
+    );
   }
 }

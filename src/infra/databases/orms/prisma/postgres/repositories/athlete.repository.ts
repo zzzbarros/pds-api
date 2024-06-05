@@ -56,4 +56,12 @@ export class AthletePostgresRepository implements IAthleteRepository {
       }),
     });
   }
+
+  async findByUuid(uuid: string): Promise<AthleteEntity | null> {
+    const athlete = await this.prismaService.athlete.findUnique({
+      where: { uuid },
+    });
+    if (!athlete) return null;
+    return new AthleteEntity(athlete);
+  }
 }
