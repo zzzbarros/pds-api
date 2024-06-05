@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TrainingTypeController } from './controllers';
-import { CreateTrainingTypeUseCase, ListTrainingTypeUseCase } from './usecases';
+import {
+  CreateTrainingTypeUseCase,
+  GetAllTrainingTypesUseCase,
+  ListTrainingTypeUseCase,
+} from './usecases';
 import { TrainingTypePostgresRepository } from 'src/infra/databases/orms/prisma/postgres';
 
 @Module({
@@ -8,10 +12,12 @@ import { TrainingTypePostgresRepository } from 'src/infra/databases/orms/prisma/
   providers: [
     CreateTrainingTypeUseCase,
     ListTrainingTypeUseCase,
+    GetAllTrainingTypesUseCase,
     {
       provide: 'ITrainingTypeRepository',
       useClass: TrainingTypePostgresRepository,
     },
   ],
+  exports: ['ITrainingTypeRepository'],
 })
 export class TrainingTypeModule {}

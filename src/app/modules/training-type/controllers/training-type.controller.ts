@@ -12,6 +12,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { Guards } from '../../auth';
 import {
   CreateTrainingTypeUseCase,
+  GetAllTrainingTypesUseCase,
   ListTrainingTypeUseCase,
 } from '../usecases';
 import { CreateTrainingTypeDto } from '../dtos';
@@ -22,6 +23,7 @@ export class TrainingTypeController {
   constructor(
     private readonly createTrainingType: CreateTrainingTypeUseCase,
     private readonly listTrainingType: ListTrainingTypeUseCase,
+    private readonly getAllTrainingTypes: GetAllTrainingTypesUseCase,
   ) {}
 
   @Post()
@@ -39,5 +41,13 @@ export class TrainingTypeController {
   @Roles(UserRoleEnum.COACH)
   async list(@Query() query: PaginateRequestDto) {
     return await this.listTrainingType.execute(query);
+  }
+
+  @Get('all')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard('jwt'), Guards.roles)
+  @Roles(UserRoleEnum.COACH)
+  async getAll() {
+    return await this.getAllTrainingTypes.execute();
   }
 }

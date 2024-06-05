@@ -19,7 +19,7 @@ export class ListTrainingTypeUseCase implements IBaseUseCase {
     size = 10,
     search,
   }: PaginateRequestDto): Promise<PaginateResponseDto<ListTrainingTypeDto>> {
-    const athletes = await this.trainingTypeRepository.findAll({
+    const athletes = await this.trainingTypeRepository.list({
       page,
       size,
       search,

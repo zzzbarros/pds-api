@@ -12,19 +12,7 @@ export class CreateTrainingTypeUseCase implements IBaseUseCase {
   ) {}
 
   async execute(input: CreateTrainingTypeDto): Promise<void> {
-    // await this.valideEmail(input.email);
     const trainingType = new TrainingTypeEntity(input);
     await this.trainingTypeRepository.create(trainingType);
   }
-
-  // private async valideEmail(email: string) {
-  //   const existentEmail = await this.athleteRepository.findByEmail(email);
-  //   if (existentEmail) {
-  //     throw new ConflictException({
-  //       title: 'E-mail já cadastrado. ',
-  //       message:
-  //         'Não foi possível cadastrar o atleta. Verifique e tente novamente...',
-  //     });
-  //   }
-  // }
 }
