@@ -6,4 +6,5 @@ export interface IAthleteRepository {
   findByEmail(email: string): Promise<AthleteEntity | null>;
   findAll(query: PaginateRequestDto): Promise<AthleteEntity[]>;
   count(query: PaginateRequestDto): Promise<number>;
+  findByUuid(uuid: string): Promise<AthleteEntity | null>;
 }

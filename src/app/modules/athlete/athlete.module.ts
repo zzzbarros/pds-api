@@ -13,5 +13,6 @@ import { AthletePostgresRepository } from 'src/infra/databases/orms/prisma/postg
       useClass: AthletePostgresRepository,
     },
   ],
+  exports: ['IAthleteRepository'],
 })
 export class AthleteModule {}

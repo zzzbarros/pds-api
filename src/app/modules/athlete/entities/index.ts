@@ -1,2 +1,1 @@
-export * from './athlete.entity'
-export * from './training.entity';
+export * from './athlete.entity';
