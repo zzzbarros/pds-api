@@ -11,6 +11,7 @@ import { MailModule } from './modules/mail/mail.module';
 import { AthleteModule } from './modules/athlete/athlete.module';
 import { TrainingTypeModule } from './modules/training-type/training-type.module';
 import { TrainingPlanningModule } from './modules/training-planning/training-planning.module';
+import { TrainingModule } from './modules/training/training.module';
 // import { ScheduleModule } from './modules/schedule/cron.module';
 
 @Module({
@@ -32,6 +33,7 @@ import { TrainingPlanningModule } from './modules/training-planning/training-pla
     AthleteModule,
     TrainingTypeModule,
     TrainingPlanningModule,
+    TrainingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
