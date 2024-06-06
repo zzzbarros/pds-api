@@ -65,6 +65,7 @@ model Athlete {
   createdAt         DateTime           @default(now()) @map("created_at")
   updatedAt         DateTime           @updatedAt @map("updated_at")
   trainingPlannings TrainingPlanning[]
+  training          Training[]
 
   @@map("athletes")
 }
@@ -77,6 +78,7 @@ model TrainingType {
   createdAt         DateTime           @default(now()) @map("created_at")
   updatedAt         DateTime           @updatedAt @map("updated_at")
   trainingPlannings TrainingPlanning[]
+  trainings         Training[]
 
   @@map("training-types")
 }
@@ -96,4 +98,22 @@ model TrainingPlanning {
   updatedAt      DateTime     @updatedAt @map("updated_at")
 
   @@map("training-plannings")
+}
+
+model Training {
+  id             Int          @id @default(autoincrement())
+  uuid           String       @unique() @default(uuid()) @db.Uuid()
+  athleteId      Int          
+  athlete        Athlete      @relation(fields: [athleteId], references: [id])
+  trainingTypeId Int          
+  trainingType   TrainingType @relation(fields: [trainingTypeId], references: [id])
+  date           DateTime
+  duration       Float
+  pse            Float
+  psr            Float
+  description    String?      @db.VarChar(255)
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+
+  @@map("trainings")
 }
