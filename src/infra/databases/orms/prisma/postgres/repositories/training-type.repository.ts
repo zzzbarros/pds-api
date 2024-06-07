@@ -29,7 +29,7 @@ export class TrainingTypePostgresRepository implements ITrainingTypeRepository {
       skip: (page - 1) * size,
       ...(search && {
         where: {
-          name: { contains: search },
+          name: { contains: search, mode: 'insensitive' },
         },
       }),
     });

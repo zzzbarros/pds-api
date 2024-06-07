@@ -39,7 +39,7 @@ export class AthletePostgresRepository implements IAthleteRepository {
       ...(search && {
         where: {
           name: { contains: search },
-          OR: [{ email: { contains: search } }],
+          OR: [{ email: { contains: search, mode: 'insensitive' } }],
         },
       }),
     });
