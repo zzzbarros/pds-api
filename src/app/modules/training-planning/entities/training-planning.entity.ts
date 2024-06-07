@@ -70,4 +70,8 @@ export class TrainingPlanningEntity extends BaseEntity {
   public getTrainingType(): TrainingTypeEntity {
     return this.trainingType;
   }
+
+  public getLoad(): number {
+    return this.duration * this.pse;
+  }
 }

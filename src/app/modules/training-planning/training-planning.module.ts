@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TrainingPlanningController } from './controllers';
 import {
   CreateTrainingPlanningUseCase,
@@ -9,7 +9,7 @@ import { AthleteModule } from '../athlete/athlete.module';
 import { TrainingTypeModule } from '../training-type/training-type.module';
 
 @Module({
-  imports: [AthleteModule, TrainingTypeModule],
+  imports: [forwardRef(() => AthleteModule), TrainingTypeModule],
   controllers: [TrainingPlanningController],
   providers: [
     CreateTrainingPlanningUseCase,
@@ -19,5 +19,6 @@ import { TrainingTypeModule } from '../training-type/training-type.module';
       useClass: TrainingPlanningRepository,
     },
   ],
+  exports: ['ITrainingPlanningRepository'],
 })
 export class TrainingPlanningModule {}
