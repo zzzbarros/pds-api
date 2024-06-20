@@ -38,8 +38,10 @@ export class AthletePostgresRepository implements IAthleteRepository {
       skip: (page - 1) * size,
       ...(search && {
         where: {
-          name: { contains: search },
-          OR: [{ email: { contains: search, mode: 'insensitive' } }],
+          OR: [
+            { name: { contains: search, mode: 'insensitive' } },
+            { email: { contains: search, mode: 'insensitive' } },
+          ],
         },
       }),
     });
@@ -50,8 +52,10 @@ export class AthletePostgresRepository implements IAthleteRepository {
     return await this.prismaService.athlete.count({
       ...(search && {
         where: {
-          name: { contains: search },
-          OR: [{ email: { contains: search } }],
+          OR: [
+            { name: { contains: search, mode: 'insensitive' } },
+            { email: { contains: search, mode: 'insensitive' } },
+          ],
         },
       }),
     });
