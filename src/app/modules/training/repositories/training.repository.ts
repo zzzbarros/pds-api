@@ -2,7 +2,7 @@ import { TrainingEntity } from '../entities';
 
 export interface ITrainingRepository {
   create(entity: TrainingEntity): Promise<void>;
-  find(options: {
+  find(search: {
     athleteId: number;
     startDate: Date;
     endDate: Date;
