@@ -40,9 +40,10 @@ export class CreateTokenSendMailListener {
         await this.queueRepository.receiveMailFromQueue();
 
       await this.queueRepository.removeMessage(messageFromQueue.receiptHandle);
-    } catch {
+    } catch (error) {
       console.log(
         'Erro ao criar o token de definição de senha e enviar e-mail para o usuário.',
+        error,
       );
     }
   }
