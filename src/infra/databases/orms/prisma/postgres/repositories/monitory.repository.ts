@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaPGService } from '../prisma-pg.service';
-import { MonitoryEntity } from 'src/app/modules/monitoring/entities';
+import { MonitoryEntity } from 'src/app/modules/monitory/entities';
 import { SortDirectionEnum, getWeekDatesFromInput } from 'src/app/shared';
-import type { IMonitoringRepository } from 'src/app/modules/monitoring/repositories';
+import type { IMonitoryRepository } from 'src/app/modules/monitory/repositories';
 
 @Injectable()
-export class MonitoryPostgresRepository implements IMonitoringRepository {
+export class MonitoryPostgresRepository implements IMonitoryRepository {
   constructor(private readonly prismaService: PrismaPGService) {}
   async upsertWeekLoad(entity: MonitoryEntity): Promise<void> {
     const data = {
