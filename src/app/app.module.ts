@@ -12,7 +12,7 @@ import { AthleteModule } from './modules/athlete/athlete.module';
 import { TrainingTypeModule } from './modules/training-type/training-type.module';
 import { TrainingPlanningModule } from './modules/training-planning/training-planning.module';
 import { TrainingModule } from './modules/training/training.module';
-import { MonitoringModule } from './modules/monitoring/monitoring.module';
+import { MonitoringModule } from './modules/monitory/monitoring.module';
 // import { ScheduleModule } from './modules/schedule/cron.module';
 
 @Module({
