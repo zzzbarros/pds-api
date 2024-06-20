@@ -42,7 +42,7 @@ export class TrainingTypePostgresRepository implements ITrainingTypeRepository {
     return await this.prismaService.trainingType.count({
       ...(search && {
         where: {
-          name: { contains: search },
+          name: { contains: search, mode: 'insensitive' },
         },
       }),
     });
