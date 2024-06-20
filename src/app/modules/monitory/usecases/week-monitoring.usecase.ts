@@ -3,9 +3,9 @@ import { WeekMonitoringRequestDto, WeekMonitoringResponseDto } from '../dtos';
 import type { IBaseUseCase } from 'src/app/shared';
 import type { IAthleteRepository } from '../../athlete';
 import type { ITrainingRepository, TrainingEntity } from '../../training';
-import type {
-  ITrainingPlanningRepository,
+import {
   TrainingPlanningEntity,
+  type ITrainingPlanningRepository,
 } from '../../training-planning';
 
 interface TrainingData {

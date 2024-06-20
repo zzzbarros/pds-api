@@ -66,6 +66,7 @@ model Athlete {
   updatedAt         DateTime           @updatedAt @map("updated_at")
   trainingPlannings TrainingPlanning[]
   training          Training[]
+  weeklyMonitorings WeeklyMonitoring[]
 
   @@map("athletes")
 }
@@ -111,9 +112,30 @@ model Training {
   duration       Float
   pse            Float
   psr            Float
+  load           Float
   description    String?      @db.VarChar(255)
   createdAt      DateTime     @default(now()) @map("created_at")
   updatedAt      DateTime     @updatedAt @map("updated_at")
 
   @@map("trainings")
+}
+
+model WeeklyMonitoring {
+  id                Int      @id @default(autoincrement())
+  uuid              String   @unique() @default(uuid()) @db.Uuid()
+  week              String   @unique
+  startDate         DateTime
+  endDate           DateTime
+  weekLoad          Float
+  averageWeekLoad   Float
+  monotony          Float
+  chronic           Float
+  acute             Float
+  chronicAcute      Float
+  strain            Float
+  deviation         Float
+  athleteId         Int
+  athlete           Athlete  @relation(fields: [athleteId], references: [id])
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
 }

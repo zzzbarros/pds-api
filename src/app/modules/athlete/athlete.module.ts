@@ -1,5 +1,9 @@
 import { Module } from '@nestjs/common';
-import { CreateAthleteUseCase, ListAthletesUseCase } from './usecases';
+import {
+  CreateAthleteUseCase,
+  ListAthletesUseCase,
+  FindAthleteUseCase,
+} from './usecases';
 import { AthleteController } from './controllers/athlete.controller';
 import { AthletePostgresRepository } from 'src/infra/databases/orms/prisma/postgres/repositories/athlete.repository';
 
@@ -8,6 +12,7 @@ import { AthletePostgresRepository } from 'src/infra/databases/orms/prisma/postg
   providers: [
     CreateAthleteUseCase,
     ListAthletesUseCase,
+    FindAthleteUseCase,
     {
       provide: 'IAthleteRepository',
       useClass: AthletePostgresRepository,
