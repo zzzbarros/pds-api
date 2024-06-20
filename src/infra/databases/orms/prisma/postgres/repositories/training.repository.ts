@@ -7,7 +7,7 @@ import {
 import { TrainingTypeEntity } from 'src/app/modules/training-type';
 
 @Injectable()
-export class TrainingRepository implements ITrainingRepository {
+export class TrainingPostgresRepository implements ITrainingRepository {
   constructor(private readonly prismaService: PrismaPGService) {}
 
   async create(training: TrainingEntity): Promise<void> {
@@ -20,16 +20,17 @@ export class TrainingRepository implements ITrainingRepository {
         pse: training.getPSE(),
         psr: training.getPSR(),
         description: training.getDescription(),
+        load: training.getLoad(),
       },
     });
   }
 
-  async find(options: {
+  async find(query: {
     startDate: Date;
     endDate: Date;
     athleteId: number;
   }): Promise<TrainingEntity[]> {
-    const { startDate, endDate, athleteId } = options;
+    const { startDate, endDate, athleteId } = query;
     const trainings = await this.prismaService.training.findMany({
       where: {
         athleteId,
