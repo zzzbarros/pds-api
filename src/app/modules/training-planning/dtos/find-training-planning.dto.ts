@@ -3,10 +3,14 @@ import { IsDateString, IsString, IsUUID } from 'class-validator';
 class TrainingPlanning {
   id: string;
   date: Date;
-  trainingType: string;
+  trainingType: {
+    id: string;
+    name: string;
+  };
   duration: number;
   pse: number;
   description?: string;
+  load: number;
 }
 
 export class FindTrainingPlanningRequestDto {

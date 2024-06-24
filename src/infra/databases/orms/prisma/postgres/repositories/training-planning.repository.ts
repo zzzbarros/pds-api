@@ -48,4 +48,36 @@ export class TrainingPlanningRepository implements ITrainingPlanningRepository {
       });
     });
   }
+
+  async findByUuid(uuid: string): Promise<TrainingPlanningEntity | null> {
+    const training = await this.prismaService.trainingPlanning.findUnique({
+      where: { uuid },
+      include: { trainingType: true },
+    });
+    if (!training) return null;
+    return new TrainingPlanningEntity({
+      ...training,
+      trainingType: new TrainingTypeEntity(training.trainingType),
+    });
+  }
+
+  async update(trainingPlanning: TrainingPlanningEntity): Promise<void> {
+    await this.prismaService.trainingPlanning.update({
+      where: {
+        uuid: trainingPlanning.getUuid(),
+      },
+      data: {
+        athleteId: trainingPlanning.getAthleteId(),
+        trainingTypeId: trainingPlanning.getTrainingTypeId(),
+        date: trainingPlanning.getDate(),
+        duration: trainingPlanning.getDuration(),
+        pse: trainingPlanning.getPSE(),
+        description: trainingPlanning.getDescription(),
+      },
+    });
+  }
+
+  async delete(uuid: string): Promise<void> {
+    await this.prismaService.trainingPlanning.delete({ where: { uuid } });
+  }
 }
