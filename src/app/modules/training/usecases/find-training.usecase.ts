@@ -54,6 +54,7 @@ export class FindTrainingUseCase implements IBaseUseCase {
         psr: training.getPSR(),
         trainingType: training.getTrainingType().getName(),
         description: training.getDescription(),
+        load: training.getLoad(),
       })),
       charge: {
         week: this.getWeekCharge(trainings),

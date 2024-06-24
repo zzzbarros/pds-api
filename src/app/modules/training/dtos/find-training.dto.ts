@@ -7,6 +7,7 @@ class Training {
   duration: number;
   pse: number;
   psr: number;
+  load: number;
   description?: string;
 }
 
