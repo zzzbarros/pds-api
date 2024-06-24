@@ -1,7 +1,7 @@
 import { BaseEntity, type IBaseConstructor } from 'src/app/shared';
 import { TrainingTypeEntity } from '../../training-type';
 
-interface IConstructor extends IBaseConstructor {
+interface IConstructor {
   athleteId: number;
   date: Date;
   trainingTypeId: number;
@@ -27,12 +27,12 @@ export class TrainingPlanningEntity extends BaseEntity {
     duration,
     pse,
     description,
+    trainingType,
     id,
     uuid,
     createdAt,
     updateAt,
-    trainingType,
-  }: IConstructor) {
+  }: IConstructor & IBaseConstructor) {
     super(id, uuid, createdAt, updateAt);
     this.athleteId = athleteId;
     this.date = date;
@@ -41,6 +41,24 @@ export class TrainingPlanningEntity extends BaseEntity {
     this.description = description;
     this.pse = pse;
     this.trainingType = trainingType;
+  }
+
+  public update({
+    date,
+    duration,
+    pse,
+    description,
+    trainingType,
+  }: Omit<IConstructor, 'athleteId' | 'trainingTypeId'>): void {
+    this.date = date;
+    this.duration = duration;
+    this.description = description;
+    this.pse = pse;
+    this.trainingType = trainingType;
+  }
+
+  public updateTrainingTypeId(trainingTypeId: number) {
+    this.trainingTypeId = trainingTypeId;
   }
 
   public getAthleteId(): number {
