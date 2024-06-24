@@ -57,8 +57,12 @@ export class FindTrainingPlanningUseCase implements IBaseUseCase {
         date: planning.getDate(),
         duration: planning.getDuration(),
         pse: planning.getPSE(),
-        trainingType: planning.getTrainingType().getName(),
+        trainingType: {
+          id: planning.getTrainingType().getUuid(),
+          name: planning.getTrainingType().getName(),
+        },
         description: planning.getDescription(),
+        load: planning.getLoad(),
       })),
       charge: {
         week: this.getWeekCharge(trainingPlanning),
