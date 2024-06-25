@@ -68,4 +68,14 @@ export class TrainingTypePostgresRepository implements ITrainingTypeRepository {
       (trainingType) => new TrainingTypeEntity(trainingType),
     );
   }
+
+  async update(trainingType: TrainingTypeEntity): Promise<void> {
+    await this.prismaService.trainingType.update({
+      where: { id: trainingType.getId() },
+      data: {
+        name: trainingType.getName(),
+        isEnabled: trainingType.getIsEnabled(),
+      },
+    });
+  }
 }
