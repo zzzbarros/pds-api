@@ -49,4 +49,37 @@ export class TrainingPostgresRepository implements ITrainingRepository {
       });
     });
   }
+
+  async delete(uuid: string): Promise<void> {
+    await this.prismaService.training.delete({ where: { uuid } });
+  }
+
+  async findByUuid(uuid: string): Promise<TrainingEntity | null> {
+    const training = await this.prismaService.training.findUnique({
+      where: { uuid },
+      include: {
+        trainingType: true,
+      },
+    });
+    if (!training) return null;
+    return new TrainingEntity({
+      ...training,
+      trainingType: new TrainingTypeEntity(training.trainingType),
+    });
+  }
+
+  async update(training: TrainingEntity): Promise<void> {
+    await this.prismaService.training.update({
+      where: { id: training.getId() },
+      data: {
+        trainingTypeId: training.getTrainingTypeId(),
+        date: training.getDate(),
+        duration: training.getDuration(),
+        pse: training.getPSE(),
+        psr: training.getPSR(),
+        description: training.getDescription(),
+        load: training.getLoad(),
+      },
+    });
+  }
 }
