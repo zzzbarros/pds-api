@@ -1,6 +1,11 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { TrainingController } from './controllers';
-import { CreateTrainingUseCase, FindTrainingUseCase } from './usecases';
+import {
+  CreateTrainingUseCase,
+  DeleteTrainingUseCase,
+  FindTrainingUseCase,
+  UpdateTrainingUseCase,
+} from './usecases';
 import { TrainingPostgresRepository } from 'src/infra/databases/orms/prisma/postgres/repositories/training.repository';
 import { AthleteModule } from '../athlete/athlete.module';
 import { TrainingTypeModule } from '../training-type/training-type.module';
@@ -14,6 +19,8 @@ import { TrainingTypeModule } from '../training-type/training-type.module';
   providers: [
     CreateTrainingUseCase,
     FindTrainingUseCase,
+    DeleteTrainingUseCase,
+    UpdateTrainingUseCase,
     {
       provide: 'ITrainingRepository',
       useClass: TrainingPostgresRepository,

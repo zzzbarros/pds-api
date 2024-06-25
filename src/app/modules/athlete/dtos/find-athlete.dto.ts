@@ -4,9 +4,13 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsUUID,
 } from 'class-validator';
 
 export class FindAthleteResponseDto {
+  @IsUUID('4')
+  id: string;
+
   @IsString()
   name: string;
 

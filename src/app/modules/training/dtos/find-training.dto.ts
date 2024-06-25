@@ -3,7 +3,7 @@ import { IsDateString, IsString, IsUUID } from 'class-validator';
 class Training {
   id: string;
   date: Date;
-  trainingType: string;
+  trainingType: { id: string; name: string };
   duration: number;
   pse: number;
   psr: number;

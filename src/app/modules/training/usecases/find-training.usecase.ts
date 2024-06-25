@@ -52,7 +52,10 @@ export class FindTrainingUseCase implements IBaseUseCase {
         duration: training.getDuration(),
         pse: training.getPSE(),
         psr: training.getPSR(),
-        trainingType: training.getTrainingType().getName(),
+        trainingType: {
+          id: training.getTrainingType().getUuid(),
+          name: training.getTrainingType().getName(),
+        },
         description: training.getDescription(),
         load: training.getLoad(),
       })),

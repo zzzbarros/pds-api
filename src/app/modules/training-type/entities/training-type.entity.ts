@@ -22,6 +22,14 @@ export class TrainingTypeEntity extends BaseEntity {
     this.isEnabled = isEnabled;
   }
 
+  public update({ name }: Pick<IConstructor, 'name'>) {
+    this.name = name;
+  }
+
+  public toggleIsEnabled(): void {
+    this.isEnabled = !this.isEnabled;
+  }
+
   public getName(): string {
     return this.name;
   }

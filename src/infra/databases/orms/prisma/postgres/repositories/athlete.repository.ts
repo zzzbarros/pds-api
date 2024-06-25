@@ -68,4 +68,18 @@ export class AthletePostgresRepository implements IAthleteRepository {
     if (!athlete) return null;
     return new AthleteEntity(athlete);
   }
+
+  async update(athlete: AthleteEntity): Promise<void> {
+    await this.prismaService.athlete.update({
+      where: { uuid: athlete.getUuid() },
+      data: {
+        name: athlete.getName(),
+        email: athlete.getEmail(),
+        birthday: athlete.getBirthday(),
+        height: athlete.getHeight(),
+        weight: athlete.getWeight(),
+        isEnabled: athlete.getIsEnabled(),
+      },
+    });
+  }
 }

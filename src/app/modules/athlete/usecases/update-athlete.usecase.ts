@@ -1,16 +1,17 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { FindAthleteResponseDto } from '../dtos';
+import { UpdateAthleteDto } from '../dtos';
 import type { IAthleteRepository } from '../repositories';
 import type { IBaseUseCase } from 'src/app/shared';
 
 @Injectable()
-export class FindAthleteUseCase implements IBaseUseCase {
+export class UpdateAthleteUseCase implements IBaseUseCase {
   constructor(
     @Inject('IAthleteRepository')
     private readonly athleteRepository: IAthleteRepository,
   ) {}
 
-  async execute(uuid: string): Promise<FindAthleteResponseDto> {
+  async execute(data: UpdateAthleteDto): Promise<void> {
+    const { uuid } = data;
     const athlete = await this.athleteRepository.findByUuid(uuid);
     if (!athlete) {
       throw new NotFoundException({
@@ -18,13 +19,7 @@ export class FindAthleteUseCase implements IBaseUseCase {
         description: 'Verifique e tente novamente.',
       });
     }
-    return {
-      id: athlete.getUuid(),
-      name: athlete.getName(),
-      birthday: athlete.getBirthday(),
-      email: athlete.getEmail(),
-      height: athlete.getHeight(),
-      weight: athlete.getWeight(),
-    };
+    athlete.update(data);
+    await this.athleteRepository.update(athlete);
   }
 }

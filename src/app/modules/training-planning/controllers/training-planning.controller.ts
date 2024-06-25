@@ -68,6 +68,6 @@ export class TrainingPlanningController {
   @Roles(UserRoleEnum.COACH)
   async delete(@Param() { uuid }: DeleteTrainingPlanningDto) {
     await this.deleteTrainingPlanningUseCase.execute(uuid);
-    return { message: 'Planejamento do treino atualizado com sucesso!' };
+    return { message: 'Planejamento do treino removido com sucesso!' };
   }
 }

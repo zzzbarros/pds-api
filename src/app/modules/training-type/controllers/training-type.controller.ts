@@ -4,7 +4,10 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
+  Patch,
   Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -12,15 +15,21 @@ import { AuthGuard } from '@nestjs/passport';
 import { Guards } from '../../auth';
 import {
   CreateTrainingTypeUseCase,
+  FindTrainingTypeUseCase,
   GetAllTrainingTypesUseCase,
   ListTrainingTypeUseCase,
+  UpdateTrainingTypeStatusUseCase,
+  UpdateTrainingTypeUseCase,
 } from '../usecases';
-import { CreateTrainingTypeDto } from '../dtos';
+import { CreateTrainingTypeDto, UpdateTrainingTypeDto } from '../dtos';
 import { PaginateRequestDto, Roles, UserRoleEnum } from 'src/app/shared';
 
 @Controller('training-types')
 export class TrainingTypeController {
   constructor(
+    private readonly updateTrainingType: UpdateTrainingTypeUseCase,
+    private readonly updateTrainingTypeStatus: UpdateTrainingTypeStatusUseCase,
+    private readonly findTrainingType: FindTrainingTypeUseCase,
     private readonly createTrainingType: CreateTrainingTypeUseCase,
     private readonly listTrainingType: ListTrainingTypeUseCase,
     private readonly getAllTrainingTypes: GetAllTrainingTypesUseCase,
@@ -49,5 +58,34 @@ export class TrainingTypeController {
   @Roles(UserRoleEnum.COACH)
   async getAll() {
     return await this.getAllTrainingTypes.execute();
+  }
+
+  @Get(':uuid')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard('jwt'), Guards.roles)
+  @Roles(UserRoleEnum.COACH)
+  async find(@Param('uuid') uuid: string) {
+    return await this.findTrainingType.execute(uuid);
+  }
+
+  @Patch(':uuid/update-status')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard('jwt'), Guards.roles)
+  @Roles(UserRoleEnum.COACH)
+  async updateStatus(@Param('uuid') uuid: string) {
+    await this.updateTrainingTypeStatus.execute(uuid);
+    return { message: 'Status do tipo de treino atualizado sucesso!' };
+  }
+
+  @Put(':uuid')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard('jwt'), Guards.roles)
+  @Roles(UserRoleEnum.COACH)
+  async update(
+    @Param('uuid') uuid: string,
+    @Body() body: UpdateTrainingTypeDto,
+  ) {
+    await this.updateTrainingType.execute({ uuid, ...body });
+    return { message: 'Tipo de treino atualizado sucesso!' };
   }
 }
