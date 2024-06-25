@@ -1,8 +1,9 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import type { IBaseUseCase } from 'src/app/shared';
 import type { IAthleteRepository } from '../repositories';
 
 @Injectable()
-export class UpdateAthleteStatusUseCase {
+export class UpdateAthleteStatusUseCase implements IBaseUseCase {
   constructor(
     @Inject('IAthleteRepository')
     private readonly athleteRepository: IAthleteRepository,
@@ -16,7 +17,7 @@ export class UpdateAthleteStatusUseCase {
         description: 'Verifique e tente novamente.',
       });
     }
-    athlete.toggleStatus();
+    athlete.toggleIsEnabled();
     await this.athleteRepository.update(athlete);
   }
 }

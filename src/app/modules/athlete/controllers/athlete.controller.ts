@@ -50,29 +50,29 @@ export class AthleteController {
     return await this.listAthletesUseCase.execute(query);
   }
 
-  @Get(':id')
+  @Get(':uuid')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('jwt'), Guards.roles)
   @Roles(UserRoleEnum.COACH)
-  async find(@Param('id') id: string) {
-    return await this.findAthleteUseCase.execute(id);
+  async find(@Param('uuid') uuid: string) {
+    return await this.findAthleteUseCase.execute(uuid);
   }
 
-  @Patch(':id/update-status')
+  @Patch(':uuid/update-status')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('jwt'), Guards.roles)
   @Roles(UserRoleEnum.COACH)
-  async updateStatus(@Param('id') id: string) {
-    await this.updateAthleteStatusUseCase.execute(id);
+  async updateStatus(@Param('uuid') uuid: string) {
+    await this.updateAthleteStatusUseCase.execute(uuid);
     return { message: 'Status do atleta atualizado sucesso!' };
   }
 
-  @Put(':id')
+  @Put(':uuid')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('jwt'), Guards.roles)
   @Roles(UserRoleEnum.COACH)
-  async update(@Param('id') id: string, @Body() body: UpdateAthleteDto) {
-    await this.updateAthleteUseCase.execute(id, body);
+  async update(@Param('uuid') uuid: string, @Body() body: UpdateAthleteDto) {
+    await this.updateAthleteUseCase.execute({ uuid, ...body });
     return { message: 'Atleta atualizado sucesso!' };
   }
 }

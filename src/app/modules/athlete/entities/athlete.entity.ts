@@ -52,7 +52,7 @@ export class AthleteEntity extends BaseEntity {
     this.height = height;
   }
 
-  public toggleStatus() {
+  public toggleIsEnabled() {
     this.isEnabled = !this.isEnabled;
   }
 

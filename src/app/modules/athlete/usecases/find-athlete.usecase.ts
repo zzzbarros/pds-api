@@ -1,9 +1,10 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import type { IAthleteRepository } from '../repositories';
 import { FindAthleteResponseDto } from '../dtos';
+import type { IAthleteRepository } from '../repositories';
+import type { IBaseUseCase } from 'src/app/shared';
 
 @Injectable()
-export class FindAthleteUseCase {
+export class FindAthleteUseCase implements IBaseUseCase {
   constructor(
     @Inject('IAthleteRepository')
     private readonly athleteRepository: IAthleteRepository,
