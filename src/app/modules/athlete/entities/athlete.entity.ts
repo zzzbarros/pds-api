@@ -38,27 +38,45 @@ export class AthleteEntity extends BaseEntity {
     this.isEnabled = isEnabled;
   }
 
-  getName(): string {
+  public update({
+    name,
+    email,
+    birthday,
+    weight,
+    height,
+  }: Pick<IConstructor, 'name' | 'email' | 'birthday' | 'weight' | 'height'>) {
+    this.name = name;
+    this.email = email;
+    this.birthday = birthday;
+    this.weight = weight;
+    this.height = height;
+  }
+
+  public toggleStatus() {
+    this.isEnabled = !this.isEnabled;
+  }
+
+  public getName(): string {
     return this.name;
   }
 
-  getEmail(): string {
+  public getEmail(): string {
     return this.email;
   }
 
-  getBirthday(): Date {
+  public getBirthday(): Date {
     return this.birthday;
   }
 
-  getWeight(): number {
+  public getWeight(): number {
     return this.weight;
   }
 
-  getHeight(): number {
+  public getHeight(): number {
     return this.height;
   }
 
-  getIsEnabled(): boolean {
+  public getIsEnabled(): boolean {
     return this.isEnabled;
   }
 }
