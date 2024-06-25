@@ -47,6 +47,24 @@ export class TrainingEntity extends BaseEntity {
     this.trainingType = trainingType;
   }
 
+  public update({
+    date,
+    duration,
+    pse,
+    description,
+    psr,
+  }: Omit<IConstructor, 'athleteId' | 'trainingTypeId'>): void {
+    this.date = date;
+    this.duration = duration;
+    this.description = description;
+    this.pse = pse;
+    this.psr = psr;
+  }
+
+  public updateTrainingTypeId(trainingTypeId: number) {
+    this.trainingTypeId = trainingTypeId;
+  }
+
   public getAthleteId(): number {
     return this.athleteId;
   }
