@@ -18,6 +18,7 @@ export class FindAthleteUseCase {
       });
     }
     return {
+      id: athlete.getUuid(),
       name: athlete.getName(),
       birthday: athlete.getBirthday(),
       email: athlete.getEmail(),
