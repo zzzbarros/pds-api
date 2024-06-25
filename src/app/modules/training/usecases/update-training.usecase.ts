@@ -1,9 +1,10 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UpdateTrainingDto } from '../dtos';
 import { TrainingEntity } from '../entities';
+import { EventsEnum, type IBaseUseCase } from 'src/app/shared';
 import type { ITrainingRepository } from '../repositories';
 import type { ITrainingTypeRepository } from '../../training-type';
-import type { IBaseUseCase } from 'src/app/shared';
 
 @Injectable()
 export class UpdateTrainingUseCase implements IBaseUseCase {
@@ -12,6 +13,7 @@ export class UpdateTrainingUseCase implements IBaseUseCase {
     private readonly trainingTypeRepository: ITrainingTypeRepository,
     @Inject('ITrainingRepository')
     private readonly trainingRepository: ITrainingRepository,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async execute(input: UpdateTrainingDto) {
@@ -36,9 +38,12 @@ export class UpdateTrainingUseCase implements IBaseUseCase {
       psr,
     });
 
-    console.log(training.getId());
-
     await this.trainingRepository.update(training);
+
+    this.eventEmitter.emit(EventsEnum.UPDATE_WEEK_LOAD, {
+      date,
+      athleteId: training.getAthleteId(),
+    });
   }
 
   private async validateTrainingType(
