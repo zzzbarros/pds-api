@@ -13,7 +13,7 @@ COPY . .
 COPY .env ./.env
 
 # Gerar os artefatos do Prisma
-RUN npm run prisma:generate
+RUN npm run prisma:generate \ && npm run prisma:migrate:deploy
 
 # Construir a aplicação
 RUN npm run build

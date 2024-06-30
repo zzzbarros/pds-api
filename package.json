@@ -21,6 +21,7 @@
     "test:e2e:watch": "jest --watch --config ./test/jest-e2e.json --watch",
     "prisma:migrate": "npx prisma migrate dev --schema ./src/infra/databases/orms/prisma/schema.prisma",
     "prisma:generate": "npx prisma generate --schema ./src/infra/databases/orms/prisma/schema.prisma",
+    "prisma:migrate:deploy": "npx prisma migrate deploy --schema ./src/infra/databases/orms/prisma/schema.prisma",
     "prisma:format": "npx prisma format --schema ./src/infra/databases/orms/prisma/schema.prisma"
   },
   "dependencies": {
