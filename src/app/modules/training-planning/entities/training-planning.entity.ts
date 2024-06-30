@@ -1,7 +1,7 @@
 import { BaseEntity, type IBaseConstructor } from 'src/app/shared';
 import { TrainingTypeEntity } from '../../training-type';
 
-interface IConstructor {
+interface ITrainingPlanning {
   athleteId: number;
   date: Date;
   trainingTypeId: number;
@@ -10,6 +10,8 @@ interface IConstructor {
   description?: string;
   trainingType?: TrainingTypeEntity;
 }
+
+interface IConstructor extends IBaseConstructor, ITrainingPlanning {}
 
 export class TrainingPlanningEntity extends BaseEntity {
   private athleteId: number;
@@ -32,7 +34,7 @@ export class TrainingPlanningEntity extends BaseEntity {
     uuid,
     createdAt,
     updateAt,
-  }: IConstructor & IBaseConstructor) {
+  }: IConstructor) {
     super(id, uuid, createdAt, updateAt);
     this.athleteId = athleteId;
     this.date = date;
@@ -49,7 +51,7 @@ export class TrainingPlanningEntity extends BaseEntity {
     pse,
     description,
     trainingType,
-  }: Omit<IConstructor, 'athleteId' | 'trainingTypeId'>): void {
+  }: Omit<ITrainingPlanning, 'athleteId' | 'trainingTypeId'>): void {
     this.date = date;
     this.duration = duration;
     this.description = description;
