@@ -16,13 +16,19 @@ export class AthletePostgresRepository implements IAthleteRepository {
         height: athlete.getHeight(),
         weight: athlete.getWeight(),
         isEnabled: athlete.getIsEnabled(),
+        coachId: athlete.getCoachId(),
       },
     });
   }
 
-  async findByEmail(email: string): Promise<AthleteEntity | null> {
+  async findByEmail(email: string, coachId: number): Promise<AthleteEntity | null> {
     const athlete = await this.prismaService.athlete.findUnique({
-      where: { email },
+      where: {
+        email_coachId: {
+          email,
+          coachId,
+        },
+      },
     });
     if (!athlete) return null;
     return new AthleteEntity(athlete);

@@ -10,7 +10,7 @@ export class UpdateAthleteUseCase implements IBaseUseCase {
     private readonly athleteRepository: IAthleteRepository,
   ) {}
 
-  async execute(data: UpdateAthleteDto): Promise<void> {
+  async execute(data: UpdateAthleteDto): Promise<{ message: string }> {
     const { uuid } = data;
     const athlete = await this.athleteRepository.findByUuid(uuid);
     if (!athlete) {
@@ -21,5 +21,6 @@ export class UpdateAthleteUseCase implements IBaseUseCase {
     }
     athlete.update(data);
     await this.athleteRepository.update(athlete);
+    return { message: 'Atleta atualizado sucesso!' };
   }
 }

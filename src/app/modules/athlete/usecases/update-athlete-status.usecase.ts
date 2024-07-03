@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import type { IBaseUseCase } from 'src/app/shared';
+import type { IBaseResponse, IBaseUseCase } from 'src/app/shared';
 import type { IAthleteRepository } from '../repositories';
 
 @Injectable()
@@ -9,7 +9,7 @@ export class UpdateAthleteStatusUseCase implements IBaseUseCase {
     private readonly athleteRepository: IAthleteRepository,
   ) {}
 
-  async execute(uuid: string): Promise<void> {
+  async execute(uuid: string): Promise<IBaseResponse> {
     const athlete = await this.athleteRepository.findByUuid(uuid);
     if (!athlete) {
       throw new NotFoundException({
@@ -19,5 +19,18 @@ export class UpdateAthleteStatusUseCase implements IBaseUseCase {
     }
     athlete.toggleIsEnabled();
     await this.athleteRepository.update(athlete);
+    return this.buildMessage(athlete.getIsEnabled());
+  }
+
+  private buildMessage(isEnabled: boolean) {
+    const title = `Atleta ${isEnabled ? 'ativado' : 'inativado'} com sucesso!`;
+    const message = `Ele passará a ${
+      isEnabled ? '' : 'não'
+    } receber os e-mails de monitoramento.`;
+
+    return {
+      title,
+      message,
+    };
   }
 }

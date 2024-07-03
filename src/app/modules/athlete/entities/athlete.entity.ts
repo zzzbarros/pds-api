@@ -4,15 +4,23 @@ interface IConstructor extends IBaseConstructor {
   name: string;
   email: string;
   birthday: Date;
+  coachId: number;
   weight?: number;
   height?: number;
   isEnabled?: boolean;
 }
 
+interface IUpdateConstructor
+  extends Pick<
+    IConstructor,
+    'name' | 'email' | 'birthday' | 'weight' | 'height'
+  > {}
+
 export class AthleteEntity extends BaseEntity {
   private name: string;
   private email: string;
   private birthday: Date;
+  private coachId: number;
   private weight?: number;
   private height?: number;
   private isEnabled = true;
@@ -21,6 +29,7 @@ export class AthleteEntity extends BaseEntity {
     name,
     email,
     birthday,
+    coachId,
     weight,
     height,
     isEnabled = true,
@@ -33,18 +42,13 @@ export class AthleteEntity extends BaseEntity {
     this.name = name;
     this.email = email;
     this.birthday = birthday;
+    this.coachId = coachId;
     this.weight = weight;
     this.height = height;
     this.isEnabled = isEnabled;
   }
 
-  public update({
-    name,
-    email,
-    birthday,
-    weight,
-    height,
-  }: Pick<IConstructor, 'name' | 'email' | 'birthday' | 'weight' | 'height'>) {
+  public update({ name, email, birthday, weight, height }: IUpdateConstructor) {
     this.name = name;
     this.email = email;
     this.birthday = birthday;
@@ -66,6 +70,10 @@ export class AthleteEntity extends BaseEntity {
 
   public getBirthday(): Date {
     return this.birthday;
+  }
+
+  public getCoachId(): number {
+    return this.coachId;
   }
 
   public getWeight(): number {
