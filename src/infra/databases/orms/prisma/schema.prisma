@@ -40,15 +40,17 @@ model Token {
 }
 
 model Coach {
-  id        Int      @id @default(autoincrement())
-  uuid      String   @unique() @default(uuid()) @db.Uuid()
-  name      String   @db.VarChar(255)
-  email     String   @unique @db.VarChar(255)
-  userId    Int      @unique()
-  user      User     @relation(fields: [userId], references: [id])
-  isEnabled Boolean  @default(true) @map("is_enabled")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id            Int            @id @default(autoincrement())
+  uuid          String         @unique() @default(uuid()) @db.Uuid()
+  name          String         @db.VarChar(255)
+  email         String         @unique @db.VarChar(255)
+  userId        Int            @unique()
+  user          User           @relation(fields: [userId], references: [id])
+  isEnabled     Boolean        @default(true) @map("is_enabled")
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  athletes      Athlete[]
+  trainingTypes TrainingType[]
 
   @@map("coaches")
 }
@@ -57,17 +59,20 @@ model Athlete {
   id                Int                @id @default(autoincrement())
   uuid              String             @unique() @default(uuid()) @db.Uuid()
   name              String             @db.VarChar(255)
-  email             String             @unique @db.VarChar(255)
+  email             String             @db.VarChar(255)
   birthday          DateTime
   weight            Float?
   height            Float?
   isEnabled         Boolean            @default(true) @map("is_enabled")
   createdAt         DateTime           @default(now()) @map("created_at")
   updatedAt         DateTime           @updatedAt @map("updated_at")
+  coachId           Int                @map("coach_id")
+  coach             Coach              @relation(fields: [coachId], references: [id])
   trainingPlannings TrainingPlanning[]
   training          Training[]
   weeklyMonitorings WeeklyMonitoring[]
 
+  @@unique([email, coachId])
   @@map("athletes")
 }
 
@@ -78,6 +83,8 @@ model TrainingType {
   isEnabled         Boolean            @default(true) @map("is_enabled")
   createdAt         DateTime           @default(now()) @map("created_at")
   updatedAt         DateTime           @updatedAt @map("updated_at")
+  coachId           Int                @map("coach_id")
+  coach             Coach              @relation(fields: [coachId], references: [id])
   trainingPlannings TrainingPlanning[]
   trainings         Training[]
 
@@ -87,9 +94,9 @@ model TrainingType {
 model TrainingPlanning {
   id             Int          @id @default(autoincrement())
   uuid           String       @unique() @default(uuid()) @db.Uuid()
-  athleteId      Int          
+  athleteId      Int
   athlete        Athlete      @relation(fields: [athleteId], references: [id])
-  trainingTypeId Int          
+  trainingTypeId Int
   trainingType   TrainingType @relation(fields: [trainingTypeId], references: [id])
   date           DateTime
   duration       Float
@@ -104,9 +111,9 @@ model TrainingPlanning {
 model Training {
   id             Int          @id @default(autoincrement())
   uuid           String       @unique() @default(uuid()) @db.Uuid()
-  athleteId      Int          
+  athleteId      Int
   athlete        Athlete      @relation(fields: [athleteId], references: [id])
-  trainingTypeId Int          
+  trainingTypeId Int
   trainingType   TrainingType @relation(fields: [trainingTypeId], references: [id])
   date           DateTime
   duration       Float
@@ -121,21 +128,21 @@ model Training {
 }
 
 model WeeklyMonitoring {
-  id                Int      @id @default(autoincrement())
-  uuid              String   @unique() @default(uuid()) @db.Uuid()
-  week              String   @unique
-  startDate         DateTime
-  endDate           DateTime
-  weekLoad          Float
-  averageWeekLoad   Float
-  monotony          Float
-  chronic           Float
-  acute             Float
-  chronicAcute      Float
-  strain            Float
-  deviation         Float
-  athleteId         Int
-  athlete           Athlete  @relation(fields: [athleteId], references: [id])
-  createdAt         DateTime @default(now()) @map("created_at")
-  updatedAt         DateTime @updatedAt @map("updated_at")
+  id              Int      @id @default(autoincrement())
+  uuid            String   @unique() @default(uuid()) @db.Uuid()
+  week            String   @unique
+  startDate       DateTime
+  endDate         DateTime
+  weekLoad        Float
+  averageWeekLoad Float
+  monotony        Float
+  chronic         Float
+  acute           Float
+  chronicAcute    Float
+  strain          Float
+  deviation       Float
+  athleteId       Int
+  athlete         Athlete  @relation(fields: [athleteId], references: [id])
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
 }
