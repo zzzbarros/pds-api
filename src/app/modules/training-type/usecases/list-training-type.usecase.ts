@@ -1,10 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import {
-  PaginateRequestDto,
-  PaginateResponseDto,
-  type IBaseUseCase,
-} from 'src/app/shared';
-import { ListTrainingTypeDto } from '../dtos';
+import { PaginateResponseDto, type IBaseUseCase } from 'src/app/shared';
+import { ListTrainingTypeDto, ListTrainingTypeRequestDto } from '../dtos';
 import type { ITrainingTypeRepository } from '../repositories';
 
 @Injectable()
@@ -18,17 +14,22 @@ export class ListTrainingTypeUseCase implements IBaseUseCase {
     page = 1,
     size = 10,
     search,
-  }: PaginateRequestDto): Promise<PaginateResponseDto<ListTrainingTypeDto>> {
+    coachId,
+  }: ListTrainingTypeRequestDto): Promise<
+    PaginateResponseDto<ListTrainingTypeDto>
+  > {
     const athletes = await this.trainingTypeRepository.list({
       page,
       size,
       search,
+      coachId,
     });
 
     const total = await this.trainingTypeRepository.count({
       page,
       size,
       search,
+      coachId,
     });
 
     return new PaginateResponseDto<ListTrainingTypeDto>({

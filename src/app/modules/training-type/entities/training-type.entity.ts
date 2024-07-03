@@ -2,15 +2,18 @@ import { BaseEntity, type IBaseConstructor } from 'src/app/shared';
 
 interface IConstructor extends IBaseConstructor {
   name: string;
+  coachId: number;
   isEnabled?: boolean;
 }
 
 export class TrainingTypeEntity extends BaseEntity {
   private name: string;
   private isEnabled: boolean;
+  private coachId: number;
 
   constructor({
     name,
+    coachId,
     isEnabled = true,
     id,
     uuid,
@@ -19,6 +22,7 @@ export class TrainingTypeEntity extends BaseEntity {
   }: IConstructor) {
     super(id, uuid, createdAt, updateAt);
     this.name = name;
+    this.coachId = coachId;
     this.isEnabled = isEnabled;
   }
 
@@ -32,6 +36,10 @@ export class TrainingTypeEntity extends BaseEntity {
 
   public getName(): string {
     return this.name;
+  }
+
+  public getCoachId(): number {
+    return this.coachId;
   }
 
   public getIsEnabled(): boolean {
