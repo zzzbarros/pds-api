@@ -1,6 +1,7 @@
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SQS } from 'aws-sdk';
+import { SendMailToQueueDto } from 'src/app/modules/queues/queue.dto';
 import { IQueueRepository } from 'src/app/modules/queues/queue.repository';
 
 @Injectable()
@@ -17,10 +18,15 @@ export class QueueSQSRepository implements IQueueRepository {
     });
   }
 
-  public async sendMailToQueue({ email, name }) {
+  public async sendMailToQueue({
+    email,
+    name,
+    token,
+    type,
+  }: SendMailToQueueDto) {
     try {
       await this.SQS.sendMessage({
-        MessageBody: JSON.stringify({ email, name }),
+        MessageBody: JSON.stringify({ name, token, type, toEmail: email }),
         QueueUrl: this.url,
       }).promise();
     } catch (error) {
