@@ -12,7 +12,7 @@ import { TrainingTypeModule } from './modules/training-type/training-type.module
 import { TrainingPlanningModule } from './modules/training-planning/training-planning.module';
 import { TrainingModule } from './modules/training/training.module';
 import { MonitoringModule } from './modules/monitory/monitoring.module';
-// import { ScheduleModule } from './modules/schedule/cron.module';
+import { ScheduleModule } from './modules/schedule/cron.module';
 
 @Module({
   imports: [
@@ -28,7 +28,7 @@ import { MonitoringModule } from './modules/monitory/monitoring.module';
     UserModule,
     PrismaModule,
     SecurityModule,
-    // ScheduleModule,
+    ScheduleModule,
     AthleteModule,
     TrainingTypeModule,
     TrainingPlanningModule,
