@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import {
-  CaptureWellBeing,
+  WellBeingMonitoryEntity,
   IWellBeingRepository,
+  GetWellBeingMonitoringRequestDto,
 } from 'src/app/modules/monitory';
 import { PrismaPGService } from '../prisma-pg.service';
 
@@ -9,7 +10,7 @@ import { PrismaPGService } from '../prisma-pg.service';
 export class WellBeingPostgresRepository implements IWellBeingRepository {
   constructor(private readonly prismaService: PrismaPGService) {}
 
-  async capture(entity: CaptureWellBeing): Promise<void> {
+  async capture(entity: WellBeingMonitoryEntity): Promise<void> {
     await this.prismaService.wellBeingMonitoring.create({
       data: {
         date: entity.getDate(),
@@ -21,5 +22,26 @@ export class WellBeingPostgresRepository implements IWellBeingRepository {
         humor: entity.getHumor(),
       },
     });
+  }
+
+  async getWeekMonitoring(
+    query: GetWellBeingMonitoringRequestDto,
+  ): Promise<WellBeingMonitoryEntity[]> {
+    const { athleteUuid, startDate, endDate } = query;
+    const wellBeingCaptures =
+      await this.prismaService.wellBeingMonitoring.findMany({
+        where: {
+          athlete: {
+            uuid: athleteUuid,
+          },
+          date: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+      });
+    return wellBeingCaptures.map(
+      (wellBeing) => new WellBeingMonitoryEntity(wellBeing),
+    );
   }
 }

@@ -10,7 +10,7 @@ interface WellBeingConstructor extends IBaseConstructor {
   humor: number;
 }
 
-export class CaptureWellBeing extends BaseEntity {
+export class WellBeingMonitoryEntity extends BaseEntity {
   private athleteId: number;
   private date: Date;
   private sleep: number;

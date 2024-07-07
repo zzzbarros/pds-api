@@ -4,7 +4,8 @@ import {
   SendWellBeingToAthletesUseCase,
   CaptureAthleteWellBeingUseCase,
   MonotonyMonitoringUseCase,
-  WeekMonitoringUseCase,
+  GetWeekMonitoringUseCase,
+  GetWellBeingMonitoringUseCase,
 } from './usecases';
 import { UpdateWeekLoadListener } from './listeners';
 import { AthleteModule } from '../athlete/athlete.module';
@@ -24,11 +25,12 @@ import { MonitoryTokenPostgresRepository } from 'src/infra/databases/orms/prisma
     forwardRef(() => TrainingPlanningModule),
   ],
   providers: [
-    WeekMonitoringUseCase,
+    GetWeekMonitoringUseCase,
     MonotonyMonitoringUseCase,
     UpdateWeekLoadListener,
     SendWellBeingToAthletesUseCase,
     CaptureAthleteWellBeingUseCase,
+    GetWellBeingMonitoringUseCase,
     {
       provide: 'IMonitoryRepository',
       useClass: MonitoryPostgresRepository,

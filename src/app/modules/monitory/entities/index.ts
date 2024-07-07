@@ -1,2 +1,2 @@
 export * from './monitory.entity';
-export * from './capture-well-being.entity';
+export * from './well-being-monitory.entity';
