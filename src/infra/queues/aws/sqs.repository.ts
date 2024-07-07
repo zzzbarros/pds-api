@@ -18,6 +18,21 @@ export class QueueSQSRepository implements IQueueRepository {
     });
   }
 
+  public async sendBatchMailToQueue(data: SendMailToQueueDto[]) {
+    try {
+      await this.SQS.sendMessageBatch({
+        Entries: data.map(({ email, name, token, type }, index) => ({
+          Id: `athlete-${index}`,
+          MessageBody: JSON.stringify({ name, token, type, toEmail: email }),
+        })),
+        QueueUrl: this.url,
+      }).promise();
+    } catch (error) {
+      console.log(error);
+      this.onError();
+    }
+  }
+
   public async sendMailToQueue({
     email,
     name,
