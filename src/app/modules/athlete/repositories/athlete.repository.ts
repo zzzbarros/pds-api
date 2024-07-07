@@ -5,7 +5,8 @@ export interface IAthleteRepository {
   create(athlete: AthleteEntity): Promise<void>;
   update(athlete: AthleteEntity): Promise<void>;
   findByEmail(email: string, coachId: number): Promise<AthleteEntity | null>;
-  findAll(query: ListAthletesRequestDto): Promise<AthleteEntity[]>;
+  findAll(data: { isEnabled: boolean }): Promise<AthleteEntity[]>;
+  listAll(query: ListAthletesRequestDto): Promise<AthleteEntity[]>;
   count(query: ListAthletesRequestDto): Promise<number>;
   findByUuid(uuid: string): Promise<AthleteEntity | null>;
 }

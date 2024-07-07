@@ -29,12 +29,12 @@ export class TrainingTypePostgresRepository implements ITrainingTypeRepository {
     const trainingTypes = await this.prismaService.trainingType.findMany({
       take: size,
       skip: (page - 1) * size,
+      where: {
+        coachId,
       ...(search && {
-        where: {
           name: { contains: search, mode: 'insensitive' },
-          coachId,
-        },
-      }),
+        }),
+      },
     });
     return trainingTypes.map(
       (trainingType) => new TrainingTypeEntity(trainingType),
@@ -46,12 +46,12 @@ export class TrainingTypePostgresRepository implements ITrainingTypeRepository {
     coachId,
   }: Pick<ListTrainingTypeRequestDto, 'search' | 'coachId'>): Promise<number> {
     return await this.prismaService.trainingType.count({
+      where: {
+      coachId,
       ...(search && {
-        where: {
           name: { contains: search, mode: 'insensitive' },
-          coachId,
-        },
-      }),
+        }),
+      },
     });
   }
 

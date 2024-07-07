@@ -14,6 +14,9 @@ export class RefreshTokenPostgresRepository implements IRefreshTokenRepository {
     await this.prismaService.token.updateMany({
       where: {
         user: { id },
+        type: {
+          in: [TokenTypeEnum.RECOVERY, TokenTypeEnum.REFRESH],
+        },
       },
       data: {
         isValid: false,

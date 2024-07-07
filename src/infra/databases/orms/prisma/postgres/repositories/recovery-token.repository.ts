@@ -14,7 +14,7 @@ export class RecoveryTokenPostgresRepository
 
   async findByToken(recoveryToken: string): Promise<TokenEntity> {
     const token = await this.prismaService.token.findFirst({
-      where: { token: recoveryToken },
+      where: { token: recoveryToken, type: TokenTypeEnum.RECOVERY },
     });
     if (!token) return null;
     return new TokenEntity({ ...token, type: token.type as TokenTypeEnum });

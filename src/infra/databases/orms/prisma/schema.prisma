@@ -56,21 +56,22 @@ model Coach {
 }
 
 model Athlete {
-  id                Int                @id @default(autoincrement())
-  uuid              String             @unique() @default(uuid()) @db.Uuid()
-  name              String             @db.VarChar(255)
-  email             String             @db.VarChar(255)
+  id                Int                   @id @default(autoincrement())
+  uuid              String                @unique() @default(uuid()) @db.Uuid()
+  name              String                @db.VarChar(255)
+  email             String                @db.VarChar(255)
   birthday          DateTime
   weight            Float?
   height            Float?
-  isEnabled         Boolean            @default(true) @map("is_enabled")
-  createdAt         DateTime           @default(now()) @map("created_at")
-  updatedAt         DateTime           @updatedAt @map("updated_at")
-  coachId           Int                @map("coach_id")
-  coach             Coach              @relation(fields: [coachId], references: [id])
+  isEnabled         Boolean               @default(true) @map("is_enabled")
+  createdAt         DateTime              @default(now()) @map("created_at")
+  updatedAt         DateTime              @updatedAt @map("updated_at")
+  coachId           Int                   @map("coach_id")
+  coach             Coach                 @relation(fields: [coachId], references: [id])
   trainingPlannings TrainingPlanning[]
   training          Training[]
   weeklyMonitorings WeeklyMonitoring[]
+  wellBeingCaptures WellBeingMonitoring[]
 
   @@unique([email, coachId])
   @@map("athletes")
@@ -88,7 +89,7 @@ model TrainingType {
   trainingPlannings TrainingPlanning[]
   trainings         Training[]
 
-  @@map("training-types")
+  @@map("training_types")
 }
 
 model TrainingPlanning {
@@ -105,7 +106,7 @@ model TrainingPlanning {
   createdAt      DateTime     @default(now()) @map("created_at")
   updatedAt      DateTime     @updatedAt @map("updated_at")
 
-  @@map("training-plannings")
+  @@map("training_plannings")
 }
 
 model Training {
@@ -145,4 +146,24 @@ model WeeklyMonitoring {
   athlete         Athlete  @relation(fields: [athleteId], references: [id])
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt @map("updated_at")
+  
+  @@map("weeklys_monitoring")
+}
+
+model WellBeingMonitoring {
+  id          Int      @id @default(autoincrement())
+  uuid        String   @unique() @default(uuid()) @db.Uuid()
+  date        DateTime 
+  athleteId   Int
+  athlete     Athlete  @relation(fields: [athleteId], references: [id])
+  sleep       Int
+  disposition Int
+  musclePain  Int
+  stress      Int
+  humor       Int
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@unique([athleteId, date])
+  @@map("well_being_monitoring")
 }

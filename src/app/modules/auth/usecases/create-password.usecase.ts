@@ -30,7 +30,7 @@ export class CreatePasswordUseCase implements IBaseUseCase {
 
     if (password !== confirmPassword) {
       throw new BadRequestException({
-        title: 'Senha e confirmação de senha não conferem.',
+        title: 'Senha e confirmação de senha não correspondem.',
         message: 'Verifique e tente novamente...',
       });
     }

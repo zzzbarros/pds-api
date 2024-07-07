@@ -1,16 +1,26 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { IScheduleRepository } from './schedule.repository';
+import { SendWellBeingToAthletesUseCase } from '../monitory/usecases';
 
 @Injectable()
 export class NestjsSchedulerRepository implements IScheduleRepository {
-  constructor(private readonly sendMailJob: any) {}
+  constructor(
+    private readonly sendWellBeingToAthletesUseCase: SendWellBeingToAthletesUseCase,
+  ) {}
 
-  // TODO:
-  // @Cron(CronExpression.EVERY_2ND_HOUR)
-  @Cron(CronExpression.EVERY_30_SECONDS)
+  @Cron(CronExpression.EVERY_DAY_AT_5AM)
   public async sendCreateUserEmail(): Promise<void> {
-    console.log('CRONJOB ACIONADA!');
-    await this.sendMailJob.execute();
+    try {
+      await this.sendWellBeingToAthletesUseCase.execute();
+      console.log(
+        'Mensagens de monitoramento diário dos atletas publicadas na fila!',
+      );
+    } catch (error) {
+      console.log(
+        'Falha ao publicar monitoramento diário dos atletas na fila!',
+        error,
+      );
+    }
   }
 }
