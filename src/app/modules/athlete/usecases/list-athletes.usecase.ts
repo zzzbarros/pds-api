@@ -16,7 +16,7 @@ export class ListAthletesUseCase implements IBaseUseCase {
     search,
     coachId,
   }: ListAthletesRequestDto): Promise<PaginateResponseDto<ListAthletesDto>> {
-    const athletes = await this.athleteRepository.findAll({
+    const athletes = await this.athleteRepository.listAll({
       page,
       size,
       search,
