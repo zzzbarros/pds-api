@@ -1,11 +1,11 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { IBaseUseCase, TokenTypeEnum } from 'src/app/shared';
 import { CaptureAthleteWellBeingDto } from '../dtos';
-import { CaptureWellBeing } from '../entities';
+import { WellBeingMonitoryEntity } from '../entities';
 import type {
   IWellBeingRepository,
   IMonitoryTokenRepository,
 } from '../repositories';
+import type { IBaseUseCase } from 'src/app/shared';
 
 @Injectable()
 export class CaptureAthleteWellBeingUseCase implements IBaseUseCase {
@@ -34,7 +34,7 @@ export class CaptureAthleteWellBeingUseCase implements IBaseUseCase {
         message: 'Verifique e tente novamente...',
       });
 
-    const capture = new CaptureWellBeing({
+    const capture = new WellBeingMonitoryEntity({
       ...captureData,
       athleteId: findToken.getUserId(),
       date: findToken.getCreatedAt(),
@@ -46,7 +46,7 @@ export class CaptureAthleteWellBeingUseCase implements IBaseUseCase {
     await this.tokenRepository.update(findToken);
 
     return {
-      title: 'Acompanhamento de Bem-estar recebido com sucesso!',
+      title: 'Acompanhamento de bem-estar enviado!',
       message:
         'As informações já foram entregues ao seu treinador e serão muito importantes para o planejamento dos próximos treinos.',
     };

@@ -1,12 +1,12 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { WeekMonitoringRequestDto, WeekMonitoringResponseDto } from '../dtos';
-import type { IBaseUseCase } from 'src/app/shared';
-import type { IAthleteRepository } from '../../athlete';
-import type { ITrainingRepository, TrainingEntity } from '../../training';
 import {
   TrainingPlanningEntity,
   type ITrainingPlanningRepository,
 } from '../../training-planning';
+import type { IAthleteRepository } from '../../athlete';
+import type { ITrainingRepository, TrainingEntity } from '../../training';
+import type { IBaseUseCase } from 'src/app/shared';
 
 interface TrainingData {
   performed: number[];
@@ -14,7 +14,7 @@ interface TrainingData {
 }
 
 @Injectable()
-export class WeekMonitoringUseCase implements IBaseUseCase {
+export class GetWeekMonitoringUseCase implements IBaseUseCase {
   constructor(
     @Inject('IAthleteRepository')
     private readonly athleteRepository: IAthleteRepository,
