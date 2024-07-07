@@ -15,7 +15,7 @@ export class GenerateRefreshTokenUseCase implements IBaseUseCase {
 
     const tokenEntity = AuthTransformer.toTokenEntity(
       userId,
-      TokenTypeEnum.refresh,
+      TokenTypeEnum.REFRESH,
     );
 
     const token = await this.tokenRepository.save(tokenEntity);
