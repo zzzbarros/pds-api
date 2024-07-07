@@ -63,7 +63,7 @@ export class CreateUserUseCase implements IBaseUseCase {
     const tokenEntity = new TokenEntity({
       userId,
       isValid: true,
-      type: TokenTypeEnum.recovery,
+      type: TokenTypeEnum.RECOVERY,
     });
     return await this.tokenRepository.save(tokenEntity);
   }
