@@ -10,20 +10,26 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Guards } from '../../auth';
-import { CaptureAthleteWellBeingDto, WeekMonitoringRequestDto } from '../dtos';
 import {
-  WeekMonitoringUseCase,
+  CaptureAthleteWellBeingDto,
+  GetWellBeingMonitoringRequestDto,
+  WeekMonitoringRequestDto,
+} from '../dtos';
+import {
+  GetWeekMonitoringUseCase,
   MonotonyMonitoringUseCase,
   CaptureAthleteWellBeingUseCase,
+  GetWellBeingMonitoringUseCase,
 } from '../usecases';
 import { Roles, UserRoleEnum } from 'src/app/shared';
 
 @Controller('monitoring')
 export class MonitoringController {
   constructor(
-    private readonly weekMonitoringUseCase: WeekMonitoringUseCase,
+    private readonly GetWeekMonitoringUseCase: GetWeekMonitoringUseCase,
     private readonly monotonyMonitoringUseCase: MonotonyMonitoringUseCase,
     private readonly captureAthleteWellBeingUseCase: CaptureAthleteWellBeingUseCase,
+    private readonly getWellBeingMonitoringUseCase: GetWellBeingMonitoringUseCase,
   ) {}
 
   @Get('week')
@@ -31,7 +37,7 @@ export class MonitoringController {
   @UseGuards(AuthGuard('jwt'), Guards.roles)
   @Roles(UserRoleEnum.COACH)
   async week(@Query() query: WeekMonitoringRequestDto) {
-    return await this.weekMonitoringUseCase.execute(query);
+    return await this.GetWeekMonitoringUseCase.execute(query);
   }
 
   @Get('monotony')
@@ -46,5 +52,11 @@ export class MonitoringController {
   @HttpCode(HttpStatus.OK)
   async captureAthleteWellBeing(@Body() body: CaptureAthleteWellBeingDto) {
     return await this.captureAthleteWellBeingUseCase.execute(body);
+  }
+
+  @Get('well-being')
+  @HttpCode(HttpStatus.OK)
+  async getWellBeingMonitory(@Query() query: GetWellBeingMonitoringRequestDto) {
+    return await this.getWellBeingMonitoringUseCase.execute(query);
   }
 }
