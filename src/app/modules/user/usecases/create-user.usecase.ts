@@ -1,12 +1,20 @@
 import { ConflictException, Inject, Injectable } from '@nestjs/common';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 import { randomUUID } from 'crypto';
+import {
+  MailQueueEnum,
+  TokenTypeEnum,
+  UserRoleEnum,
+  type IBaseUseCase,
+} from 'src/app/shared';
 import { CreateUserDto } from '../dtos';
 import { UserEntity } from '../entities';
-import type { IUserRepository } from '../repositories';
-import type { ISecurityRepository } from '../../auth';
+import {
+  TokenEntity,
+  type IRecoveryTokenRepository,
+  type ISecurityRepository,
+} from '../../auth';
 import type { IQueueRepository } from '../../queues';
-import { EventsEnum, UserRoleEnum, type IBaseUseCase } from 'src/app/shared';
+import type { IUserRepository } from '../repositories';
 
 @Injectable()
 export class CreateUserUseCase implements IBaseUseCase {
@@ -17,7 +25,8 @@ export class CreateUserUseCase implements IBaseUseCase {
     private readonly queueRepository: IQueueRepository,
     @Inject('ISecurityRepository')
     private readonly securityRepository: ISecurityRepository,
-    private readonly eventEmitter: EventEmitter2,
+    @Inject('IRecoveryTokenRepository')
+    private readonly tokenRepository: IRecoveryTokenRepository,
   ) {}
 
   async execute(input: CreateUserDto): Promise<void> {
@@ -27,12 +36,13 @@ export class CreateUserUseCase implements IBaseUseCase {
     const password = await this.generatePassword();
     const user = new UserEntity({ name, email, password, role });
     const { id: userId } = await this.userRepository.create(user);
+    const token = await this.createToken(userId);
     await this.queueRepository.sendMailToQueue({
-      email,
       name,
-      userId,
+      email,
+      token: token.getToken(),
+      type: MailQueueEnum.CREATE,
     });
-    this.eventEmitter.emit(EventsEnum.CREATE_USER, { userId, email, name });
   }
 
   private async validateEmailUniqueness(email: string): Promise<void> {
@@ -47,5 +57,14 @@ export class CreateUserUseCase implements IBaseUseCase {
 
   private async generatePassword() {
     return await this.securityRepository.hashPassword(randomUUID());
+  }
+
+  private async createToken(userId: number) {
+    const tokenEntity = new TokenEntity({
+      userId,
+      isValid: true,
+      type: TokenTypeEnum.recovery,
+    });
+    return await this.tokenRepository.save(tokenEntity);
   }
 }

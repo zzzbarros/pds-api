@@ -24,7 +24,6 @@
     "prisma:format": "npx prisma format --schema ./src/infra/databases/orms/prisma/schema.prisma"
   },
   "dependencies": {
-    "@nestjs-modules/mailer": "^1.9.1",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.1.1",
     "@nestjs/core": "^10.0.0",

@@ -1,11 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { IScheduleRepository } from './schedule.repository';
-import { SendMailJob } from '../user/jobs';
 
 @Injectable()
 export class NestjsSchedulerRepository implements IScheduleRepository {
-  constructor(private readonly sendMailJob: SendMailJob) {}
+  constructor(private readonly sendMailJob: any) {}
 
   // TODO:
   // @Cron(CronExpression.EVERY_2ND_HOUR)
