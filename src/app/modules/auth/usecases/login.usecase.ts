@@ -32,14 +32,16 @@ export class LoginUseCase implements IBaseUseCase {
   private async validateUser(email: string) {
     const user = await this.userRepository.findByEmail(email);
 
+    const message = 'Verifique e tente novamente!';
+
     if (!user) {
-      const message = 'Credenciais inválidas!';
-      throw new BadRequestException(message);
+      const title = 'Credenciais inválidas!';
+      throw new BadRequestException({ title, message });
     }
 
     if (!user.getIsEnabled()) {
-      const message = 'Usuário desabilitado!';
-      throw new ForbiddenException(message);
+      const title = 'Usuário desabilitado!';
+      throw new ForbiddenException({ title, message });
     }
 
     return user;

@@ -1,11 +1,11 @@
-import { PaginateRequestDto } from 'src/app/shared';
 import { AthleteEntity } from '../entities';
+import { ListAthletesRequestDto } from '../dtos';
 
 export interface IAthleteRepository {
   create(athlete: AthleteEntity): Promise<void>;
   update(athlete: AthleteEntity): Promise<void>;
-  findByEmail(email: string): Promise<AthleteEntity | null>;
-  findAll(query: PaginateRequestDto): Promise<AthleteEntity[]>;
-  count(query: PaginateRequestDto): Promise<number>;
+  findByEmail(email: string, coachId: number): Promise<AthleteEntity | null>;
+  findAll(query: ListAthletesRequestDto): Promise<AthleteEntity[]>;
+  count(query: ListAthletesRequestDto): Promise<number>;
   findByUuid(uuid: string): Promise<AthleteEntity | null>;
 }

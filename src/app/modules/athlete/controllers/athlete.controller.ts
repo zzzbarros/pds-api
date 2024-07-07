@@ -12,7 +12,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { PaginateRequestDto, Roles, UserRoleEnum } from 'src/app/shared';
+import {
+  GetUserAuth,
+  PaginateRequestDto,
+  Roles,
+  UserRoleEnum,
+} from 'src/app/shared';
 import {
   CreateAthleteUseCase,
   FindAthleteUseCase,
@@ -22,6 +27,7 @@ import {
 } from '../usecases';
 import { CreateAthleteDto, UpdateAthleteDto } from '../dtos';
 import { Guards } from '../../auth/guards';
+import { UserEntity } from '../../user';
 
 @Controller('athletes')
 export class AthleteController {
@@ -37,8 +43,14 @@ export class AthleteController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('jwt'), Guards.roles)
   @Roles(UserRoleEnum.COACH)
-  async create(@Body() body: CreateAthleteDto) {
-    await this.createAthleteUseCase.execute(body);
+  async create(
+    @Body() body: Omit<CreateAthleteDto, 'coachId'>,
+    @GetUserAuth() user: UserEntity,
+  ) {
+    await this.createAthleteUseCase.execute({
+      ...body,
+      coachId: user.getCoachId(),
+    });
     return { message: 'Usuário criado com sucesso!' };
   }
 
@@ -46,8 +58,14 @@ export class AthleteController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('jwt'), Guards.roles)
   @Roles(UserRoleEnum.COACH)
-  async list(@Query() query: PaginateRequestDto) {
-    return await this.listAthletesUseCase.execute(query);
+  async list(
+    @Query() query: PaginateRequestDto,
+    @GetUserAuth() user: UserEntity,
+  ) {
+    return await this.listAthletesUseCase.execute({
+      ...query,
+      coachId: user.getCoachId(),
+    });
   }
 
   @Get(':uuid')
@@ -63,8 +81,7 @@ export class AthleteController {
   @UseGuards(AuthGuard('jwt'), Guards.roles)
   @Roles(UserRoleEnum.COACH)
   async updateStatus(@Param('uuid') uuid: string) {
-    await this.updateAthleteStatusUseCase.execute(uuid);
-    return { message: 'Status do atleta atualizado sucesso!' };
+    return await this.updateAthleteStatusUseCase.execute(uuid);
   }
 
   @Put(':uuid')
@@ -72,7 +89,6 @@ export class AthleteController {
   @UseGuards(AuthGuard('jwt'), Guards.roles)
   @Roles(UserRoleEnum.COACH)
   async update(@Param('uuid') uuid: string, @Body() body: UpdateAthleteDto) {
-    await this.updateAthleteUseCase.execute({ uuid, ...body });
-    return { message: 'Atleta atualizado sucesso!' };
+    return await this.updateAthleteUseCase.execute({ uuid, ...body });
   }
 }

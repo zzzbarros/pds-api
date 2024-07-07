@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Guards } from '../../auth';
+import { UserEntity } from '../../user';
 import {
   CreateTrainingTypeUseCase,
   FindTrainingTypeUseCase,
@@ -22,7 +23,12 @@ import {
   UpdateTrainingTypeUseCase,
 } from '../usecases';
 import { CreateTrainingTypeDto, UpdateTrainingTypeDto } from '../dtos';
-import { PaginateRequestDto, Roles, UserRoleEnum } from 'src/app/shared';
+import {
+  GetUserAuth,
+  PaginateRequestDto,
+  Roles,
+  UserRoleEnum,
+} from 'src/app/shared';
 
 @Controller('training-types')
 export class TrainingTypeController {
@@ -39,8 +45,14 @@ export class TrainingTypeController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('jwt'), Guards.roles)
   @Roles(UserRoleEnum.COACH)
-  async create(@Body() body: CreateTrainingTypeDto) {
-    await this.createTrainingType.execute(body);
+  async create(
+    @Body() body: Omit<CreateTrainingTypeDto, 'coachId'>,
+    @GetUserAuth() user: UserEntity,
+  ) {
+    await this.createTrainingType.execute({
+      ...body,
+      coachId: user.getCoachId(),
+    });
     return { message: 'Tipo de Treino criado com sucesso!' };
   }
 
@@ -48,16 +60,22 @@ export class TrainingTypeController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('jwt'), Guards.roles)
   @Roles(UserRoleEnum.COACH)
-  async list(@Query() query: PaginateRequestDto) {
-    return await this.listTrainingType.execute(query);
+  async list(
+    @Query() query: PaginateRequestDto,
+    @GetUserAuth() user: UserEntity,
+  ) {
+    return await this.listTrainingType.execute({
+      ...query,
+      coachId: user.getCoachId(),
+    });
   }
 
   @Get('all')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('jwt'), Guards.roles)
   @Roles(UserRoleEnum.COACH)
-  async getAll() {
-    return await this.getAllTrainingTypes.execute();
+  async getAll(@GetUserAuth() user: UserEntity) {
+    return await this.getAllTrainingTypes.execute(user.getId());
   }
 
   @Get(':uuid')

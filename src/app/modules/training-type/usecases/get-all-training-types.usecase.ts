@@ -10,8 +10,9 @@ export class GetAllTrainingTypesUseCase implements IBaseUseCase {
     private readonly trainingTypeRepository: ITrainingTypeRepository,
   ) {}
 
-  async execute(): Promise<GetAllTrainingTypesDto> {
+  async execute(coachId: number): Promise<GetAllTrainingTypesDto> {
     const trainingTypes = await this.trainingTypeRepository.findAll({
+      coachId,
       isEnabled: true,
     });
 

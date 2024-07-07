@@ -1,4 +1,5 @@
 import { IsBoolean, IsEmail, IsString } from 'class-validator';
+import { PaginateRequestDto } from 'src/app/shared';
 
 export class ListAthletesDto {
   @IsString()
@@ -12,4 +13,8 @@ export class ListAthletesDto {
 
   @IsBoolean()
   isEnabled: boolean;
+}
+
+export class ListAthletesRequestDto extends PaginateRequestDto {
+  coachId: number;
 }

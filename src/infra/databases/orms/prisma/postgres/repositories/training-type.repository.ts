@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { PrismaPGService } from '../prisma-pg.service';
 import {
   TrainingTypeEntity,
+  ListTrainingTypeRequestDto,
   type ITrainingTypeRepository,
 } from 'src/app/modules/training-type';
-import { PaginateRequestDto } from 'src/app/shared';
 
 @Injectable()
 export class TrainingTypePostgresRepository implements ITrainingTypeRepository {
@@ -14,6 +14,7 @@ export class TrainingTypePostgresRepository implements ITrainingTypeRepository {
     await this.prismaService.trainingType.create({
       data: {
         name: trainingType.getName(),
+        coachId: trainingType.getCoachId(),
         isEnabled: trainingType.getIsEnabled(),
       },
     });
@@ -23,13 +24,15 @@ export class TrainingTypePostgresRepository implements ITrainingTypeRepository {
     page = 1,
     size = 10,
     search,
-  }: PaginateRequestDto): Promise<TrainingTypeEntity[]> {
+    coachId,
+  }: ListTrainingTypeRequestDto): Promise<TrainingTypeEntity[]> {
     const trainingTypes = await this.prismaService.trainingType.findMany({
       take: size,
       skip: (page - 1) * size,
       ...(search && {
         where: {
           name: { contains: search, mode: 'insensitive' },
+          coachId,
         },
       }),
     });
@@ -38,11 +41,15 @@ export class TrainingTypePostgresRepository implements ITrainingTypeRepository {
     );
   }
 
-  async count({ search }: Pick<PaginateRequestDto, 'search'>): Promise<number> {
+  async count({
+    search,
+    coachId,
+  }: Pick<ListTrainingTypeRequestDto, 'search' | 'coachId'>): Promise<number> {
     return await this.prismaService.trainingType.count({
       ...(search && {
         where: {
           name: { contains: search, mode: 'insensitive' },
+          coachId,
         },
       }),
     });
@@ -56,13 +63,13 @@ export class TrainingTypePostgresRepository implements ITrainingTypeRepository {
     return new TrainingTypeEntity(trainingType);
   }
 
-  async findAll(options?: {
+  async findAll(where: {
+    coachId: number;
     isEnabled: boolean;
   }): Promise<TrainingTypeEntity[]> {
-    const query = {
-      ...(options && { where: { isEnabled: options.isEnabled } }),
-    };
-    const trainingTypes = await this.prismaService.trainingType.findMany(query);
+    const trainingTypes = await this.prismaService.trainingType.findMany({
+      where,
+    });
     if (!trainingTypes.length) return [];
     return trainingTypes.map(
       (trainingType) => new TrainingTypeEntity(trainingType),

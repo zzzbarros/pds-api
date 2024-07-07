@@ -5,6 +5,12 @@ import type { IUserRepository } from 'src/app/modules/user/repositories';
 
 @Injectable()
 export class UserPostgresRepository implements IUserRepository {
+  private baseInclude = {
+    coach: {
+      select: { id: true },
+    },
+  };
+
   constructor(private readonly prismaService: PrismaPGService) {}
 
   public async create(user: UserEntity): Promise<{ id: number }> {
@@ -35,9 +41,12 @@ export class UserPostgresRepository implements IUserRepository {
   }
 
   public async findByEmail(email: string): Promise<UserEntity | null> {
-    const user = await this.prismaService.user.findUnique({ where: { email } });
+    const user = await this.prismaService.user.findUnique({
+      where: { email },
+      include: this.baseInclude,
+    });
     if (!user) return null;
-    return new UserEntity(user);
+    return new UserEntity({ ...user, coachId: user?.coach?.id });
   }
 
   public async findByUuid(uuid: string): Promise<UserEntity | null> {
@@ -49,9 +58,10 @@ export class UserPostgresRepository implements IUserRepository {
   public async findById(id: number): Promise<UserEntity> {
     const user = await this.prismaService.user.findUnique({
       where: { id },
+      include: this.baseInclude,
     });
     if (!user) return null;
-    return new UserEntity(user);
+    return new UserEntity({ ...user, coachId: user?.coach?.id });
   }
 
   public async update(user: UserEntity): Promise<void> {

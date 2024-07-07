@@ -23,4 +23,6 @@ export class CreateAthleteDto {
   @IsNumber({}, { message: 'Altura não é um número' })
   @IsOptional()
   height?: number;
+
+  coachId: number;
 }
