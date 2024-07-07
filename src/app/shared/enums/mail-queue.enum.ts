@@ -1,5 +1,5 @@
-export enum TokenTypeEnum {
-  REFRESH = 'refresh',
+export enum MailQueueEnum {
+  CREATE = 'create',
   RECOVERY = 'recovery',
   MONITORY = 'monitory',
 }

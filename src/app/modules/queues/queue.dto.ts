@@ -1,7 +1,10 @@
+import { MailQueueEnum } from 'src/app/shared';
+
 export class SendMailToQueueDto {
   name: string;
   email: string;
-  userId: number;
+  token: string;
+  type: MailQueueEnum;
 }
 
 export class ReceiveMailFromQueueDto {

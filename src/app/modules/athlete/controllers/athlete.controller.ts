@@ -51,7 +51,7 @@ export class AthleteController {
       ...body,
       coachId: user.getCoachId(),
     });
-    return { message: 'Usuário criado com sucesso!' };
+    return { message: 'Atleta criado com sucesso!' };
   }
 
   @Get()

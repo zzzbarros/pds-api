@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaPGService } from '../prisma-pg.service';
-import { AthleteEntity, IAthleteRepository } from 'src/app/modules/athlete';
-import { PaginateRequestDto } from 'src/app/shared';
+import {
+  AthleteEntity,
+  IAthleteRepository,
+  ListAthletesRequestDto,
+} from 'src/app/modules/athlete';
 
 @Injectable()
 export class AthletePostgresRepository implements IAthleteRepository {
@@ -21,7 +24,10 @@ export class AthletePostgresRepository implements IAthleteRepository {
     });
   }
 
-  async findByEmail(email: string, coachId: number): Promise<AthleteEntity | null> {
+  async findByEmail(
+    email: string,
+    coachId: number,
+  ): Promise<AthleteEntity | null> {
     const athlete = await this.prismaService.athlete.findUnique({
       where: {
         email_coachId: {
@@ -34,36 +40,51 @@ export class AthletePostgresRepository implements IAthleteRepository {
     return new AthleteEntity(athlete);
   }
 
-  async findAll({
-    page = 1,
-    size = 10,
-    search,
-  }: PaginateRequestDto): Promise<AthleteEntity[]> {
+  async findAll(query: { isEnabled: boolean }): Promise<AthleteEntity[]> {
     const athletes = await this.prismaService.athlete.findMany({
-      take: size,
-      skip: (page - 1) * size,
-      ...(search && {
-        where: {
-          OR: [
-            { name: { contains: search, mode: 'insensitive' } },
-            { email: { contains: search, mode: 'insensitive' } },
-          ],
-        },
-      }),
+      where: {
+        isEnabled: query.isEnabled,
+      },
     });
     return athletes.map((athlete) => new AthleteEntity(athlete));
   }
 
-  async count({ search }: Pick<PaginateRequestDto, 'search'>): Promise<number> {
-    return await this.prismaService.athlete.count({
-      ...(search && {
-        where: {
+  async listAll({
+    page = 1,
+    size = 10,
+    search,
+    coachId,
+  }: ListAthletesRequestDto): Promise<AthleteEntity[]> {
+    const athletes = await this.prismaService.athlete.findMany({
+      take: size,
+      skip: (page - 1) * size,
+      where: {
+        coachId,
+        ...(search && {
           OR: [
-            { name: { contains: search, mode: 'insensitive' } },
-            { email: { contains: search, mode: 'insensitive' } },
+            { coachId, name: { contains: search, mode: 'insensitive' } },
+            { coachId, email: { contains: search, mode: 'insensitive' } },
           ],
-        },
-      }),
+        }),
+      },
+    });
+    return athletes.map((athlete) => new AthleteEntity(athlete));
+  }
+
+  async count({
+    search,
+    coachId,
+  }: Pick<ListAthletesRequestDto, 'search' | 'coachId'>): Promise<number> {
+    return await this.prismaService.athlete.count({
+      where: {
+        coachId,
+        ...(search && {
+          OR: [
+            { coachId, name: { contains: search, mode: 'insensitive' } },
+            { coachId, email: { contains: search, mode: 'insensitive' } },
+          ],
+        }),
+      },
     });
   }
 

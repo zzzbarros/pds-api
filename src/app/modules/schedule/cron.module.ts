@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ScheduleModule as NestScheduleModule } from '@nestjs/schedule';
 import { NestjsSchedulerRepository } from './nestjs-scheduler.repository';
-import { UserModule } from '../user/user.module';
+import { MonitoringModule } from '../monitory/monitoring.module';
 
 @Module({
-  imports: [NestScheduleModule.forRoot(), UserModule],
+  imports: [NestScheduleModule.forRoot(), MonitoringModule],
   providers: [
     {
       provide: 'ICronRepository',
