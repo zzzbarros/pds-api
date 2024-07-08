@@ -92,7 +92,7 @@ export class TrainingTypeController {
   @Roles(UserRoleEnum.COACH)
   async updateStatus(@Param('uuid') uuid: string) {
     await this.updateTrainingTypeStatus.execute(uuid);
-    return { message: 'Status do tipo de treino atualizado sucesso!' };
+    return { message: 'Status do tipo de treino atualizado com sucesso!' };
   }
 
   @Put(':uuid')
@@ -104,6 +104,6 @@ export class TrainingTypeController {
     @Body() body: UpdateTrainingTypeDto,
   ) {
     await this.updateTrainingType.execute({ uuid, ...body });
-    return { message: 'Tipo de treino atualizado sucesso!' };
+    return { message: 'Tipo de treino atualizado com sucesso!' };
   }
 }
