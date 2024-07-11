@@ -26,4 +26,11 @@ export class RecoveryTokenInMemoryRepository
       return t;
     });
   }
+
+  async invalidateTokensByUserId(id: number): Promise<void> {
+    this.tokens = this.tokens.map((token) => {
+      if (token.getUserId() === id) token.invalid();
+      return token;
+    });
+  }
 }

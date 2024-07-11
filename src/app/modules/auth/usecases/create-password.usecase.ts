@@ -55,8 +55,8 @@ export class CreatePasswordUseCase implements IBaseUseCase {
 
     if (!user)
       throw new NotFoundException({
-        title: 'usuário não encontrado.',
-        message: 'Verifique e tente novamente...',
+        title: 'Usuário não encontrado.',
+        message: 'Verifique o e-mail e tente novamente...',
       });
 
     const newPassword = await this.securityRepository.hashPassword(password);

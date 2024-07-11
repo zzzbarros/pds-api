@@ -36,8 +36,9 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     const nowDate = new Date();
 
     if (tokenExpirationDate < nowDate) {
-      const message = 'Autenticação expirou';
-      throw new TokenExpiredException(message);
+      const title = 'Autenticação expirou!';
+      const message = 'Faça o login novamente...';
+      throw new TokenExpiredException(title, message);
     }
 
     return payload;

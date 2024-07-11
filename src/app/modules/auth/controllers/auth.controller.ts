@@ -1,12 +1,23 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { CreatePasswordDto, LoginRequestDto, LoginResponseDto } from '../dtos';
+import {
+  CreatePasswordDto,
+  ForgotPasswordDto,
+  LoginRequestDto,
+  LoginResponseDto,
+} from '../dtos';
 import {
   GenerateRefreshTokenUseCase,
   GenerateAccessTokenUseCase,
   LoginUseCase,
   CreatePasswordUseCase,
+  ForgotPasswordUseCase,
+  ValidateRefreshTokenUseCase,
 } from '../usecases';
 import { IBaseResponse } from 'src/app/shared';
+import {
+  RefreshTokenRequestDto,
+  RefreshTokenResponseDto,
+} from '../dtos/refresh-token.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -15,6 +26,8 @@ export class AuthController {
     private readonly createPasswordUseCase: CreatePasswordUseCase,
     private readonly generateRefreshToken: GenerateRefreshTokenUseCase,
     private readonly generateAccessToken: GenerateAccessTokenUseCase,
+    private readonly forgotPasswordUseCase: ForgotPasswordUseCase,
+    private readonly validateRefreshTokenUseCase: ValidateRefreshTokenUseCase,
   ) {}
 
   @Post('login')
@@ -50,6 +63,32 @@ export class AuthController {
     return {
       title: 'Senha cadastrada com sucesso!',
       message: 'Acesse a plataforma...',
+    };
+  }
+
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
+  async forgotPassword(
+    @Body() body: ForgotPasswordDto,
+  ): Promise<IBaseResponse> {
+    await this.forgotPasswordUseCase.execute(body);
+    return {
+      title: 'Nova senha cadastrada com sucesso!',
+      message: 'Acesse a plataforma...',
+    };
+  }
+
+  @Post('refresh-token')
+  @HttpCode(HttpStatus.OK)
+  async getAccessToken(
+    @Body() { refreshToken }: RefreshTokenRequestDto,
+  ): Promise<RefreshTokenResponseDto> {
+    const jwtPayload = await this.validateRefreshTokenUseCase.execute(
+      refreshToken,
+    );
+    const token = await this.generateAccessToken.execute(jwtPayload);
+    return {
+      token,
     };
   }
 }
