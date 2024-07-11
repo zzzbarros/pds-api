@@ -40,4 +40,18 @@ export class RecoveryTokenPostgresRepository
       },
     });
   }
+
+  async invalidateTokensByUserId(id: number): Promise<void> {
+    await this.prismaService.token.updateMany({
+      where: {
+        user: { id },
+        type: {
+          in: [TokenTypeEnum.RECOVERY],
+        },
+      },
+      data: {
+        isValid: false,
+      },
+    });
+  }
 }
