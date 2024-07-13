@@ -43,8 +43,6 @@ export class UpdateWeekLoadListener {
         ...dates,
       });
 
-      console.log(previousWeeksMonitory);
-
       weekMonitory.calculate(weekTrainings, previousWeeksMonitory);
 
       await this.monitoryRepository.upsertWeekLoad(weekMonitory);
