@@ -9,6 +9,7 @@ interface ITrainingPlanning {
   pse: number;
   description?: string;
   trainingType?: TrainingTypeEntity;
+  finished?: boolean;
 }
 
 interface IConstructor extends IBaseConstructor, ITrainingPlanning {}
@@ -21,6 +22,7 @@ export class TrainingPlanningEntity extends BaseEntity {
   private pse: number;
   private description?: string;
   private trainingType?: TrainingTypeEntity;
+  private finished: boolean;
 
   constructor({
     athleteId,
@@ -34,6 +36,7 @@ export class TrainingPlanningEntity extends BaseEntity {
     uuid,
     createdAt,
     updateAt,
+    finished = false,
   }: IConstructor) {
     super(id, uuid, createdAt, updateAt);
     this.athleteId = athleteId;
@@ -43,6 +46,7 @@ export class TrainingPlanningEntity extends BaseEntity {
     this.description = description;
     this.pse = pse;
     this.trainingType = trainingType;
+    this.finished = finished;
   }
 
   public update({
@@ -51,7 +55,10 @@ export class TrainingPlanningEntity extends BaseEntity {
     pse,
     description,
     trainingType,
-  }: Omit<ITrainingPlanning, 'athleteId' | 'trainingTypeId'>): void {
+  }: Omit<
+    ITrainingPlanning,
+    'athleteId' | 'trainingTypeId' | 'finished'
+  >): void {
     this.date = date;
     this.duration = duration;
     this.description = description;
@@ -93,5 +100,13 @@ export class TrainingPlanningEntity extends BaseEntity {
 
   public getLoad(): number {
     return this.duration * this.pse;
+  }
+
+  public getFinished(): boolean {
+    return this.finished;
+  }
+
+  public finish() {
+    this.finished = true;
   }
 }
