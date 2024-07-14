@@ -15,6 +15,7 @@ import {
   CreateTrainingDto,
   DeleteTrainingDto,
   FindTrainingRequestDto,
+  ListTrainingRequestDto,
   UpdateTrainingDto,
 } from '../dtos';
 import { AuthGuard } from '@nestjs/passport';
@@ -23,6 +24,7 @@ import {
   CreateTrainingUseCase,
   DeleteTrainingUseCase,
   FindTrainingUseCase,
+  ListTrainingUseCase,
   UpdateTrainingUseCase,
 } from '../usecases';
 import { Roles, UserRoleEnum } from 'src/app/shared';
@@ -31,9 +33,10 @@ import { Roles, UserRoleEnum } from 'src/app/shared';
 export class TrainingController {
   constructor(
     private readonly createTrainingUseCase: CreateTrainingUseCase,
-    private readonly findTrainingUseCase: FindTrainingUseCase,
+    private readonly listTrainingUseCase: ListTrainingUseCase,
     private readonly deleteTrainingUseCase: DeleteTrainingUseCase,
     private readonly updateTrainingUseCase: UpdateTrainingUseCase,
+    private readonly findTrainingUseCase: FindTrainingUseCase,
   ) {}
 
   @Post()
@@ -49,8 +52,8 @@ export class TrainingController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('jwt'), Guards.roles)
   @Roles(UserRoleEnum.COACH)
-  async list(@Query() query: FindTrainingRequestDto) {
-    return await this.findTrainingUseCase.execute(query);
+  async list(@Query() query: ListTrainingRequestDto) {
+    return await this.listTrainingUseCase.execute(query);
   }
 
   @Put()
@@ -69,5 +72,13 @@ export class TrainingController {
   async delete(@Param() { uuid }: DeleteTrainingDto) {
     await this.deleteTrainingUseCase.execute(uuid);
     return { message: 'Treino removido com sucesso!' };
+  }
+
+  @Get(':uuid')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard('jwt'), Guards.roles)
+  @Roles(UserRoleEnum.COACH)
+  async findByUuid(@Param() { uuid }: FindTrainingRequestDto) {
+    return this.findTrainingUseCase.execute(uuid);
   }
 }
