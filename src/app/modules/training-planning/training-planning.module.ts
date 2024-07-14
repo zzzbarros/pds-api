@@ -3,9 +3,10 @@ import { TrainingPlanningController } from './controllers';
 import {
   CreateTrainingPlanningUseCase,
   DeleteTrainingPlanningUseCase,
-  FindTrainingPlanningUseCase,
+  ListTrainingPlanningUseCase,
   FinishTrainingPlanningUseCase,
   UpdateTrainingPlanningUseCase,
+  FindTrainingPlanningUseCase,
 } from './usecases';
 import { TrainingPlanningRepository } from 'src/infra/databases/orms/prisma/postgres/repositories/training-planning.repository';
 import { AthleteModule } from '../athlete/athlete.module';
@@ -16,6 +17,7 @@ import { TrainingTypeModule } from '../training-type/training-type.module';
   controllers: [TrainingPlanningController],
   providers: [
     CreateTrainingPlanningUseCase,
+    ListTrainingPlanningUseCase,
     FindTrainingPlanningUseCase,
     UpdateTrainingPlanningUseCase,
     DeleteTrainingPlanningUseCase,

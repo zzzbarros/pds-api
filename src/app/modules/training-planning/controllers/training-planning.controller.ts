@@ -15,18 +15,20 @@ import {
 import {
   CreateTrainingPlanningDto,
   DeleteTrainingPlanningDto,
-  FindTrainingPlanningRequestDto,
+  ListTrainingPlanningRequestDto,
   FinishTrainingPlanningDto,
   UpdateTrainingPlanningDto,
+  FindTrainingPlanningRequestDto,
 } from '../dtos';
 import { AuthGuard } from '@nestjs/passport';
 import { Guards } from 'src/app/modules/auth';
 import {
   CreateTrainingPlanningUseCase,
   DeleteTrainingPlanningUseCase,
-  FindTrainingPlanningUseCase,
+  ListTrainingPlanningUseCase,
   FinishTrainingPlanningUseCase,
   UpdateTrainingPlanningUseCase,
+  FindTrainingPlanningUseCase,
 } from '../usecases';
 import { Roles, UserRoleEnum } from 'src/app/shared';
 
@@ -35,9 +37,10 @@ export class TrainingPlanningController {
   constructor(
     private readonly createTrainingPlanningUseCase: CreateTrainingPlanningUseCase,
     private readonly updateTrainingPlanningUseCase: UpdateTrainingPlanningUseCase,
-    private readonly findTrainingPlanningUseCase: FindTrainingPlanningUseCase,
+    private readonly listTrainingPlanningUseCase: ListTrainingPlanningUseCase,
     private readonly deleteTrainingPlanningUseCase: DeleteTrainingPlanningUseCase,
     private readonly finishTrainingPlanningUseCase: FinishTrainingPlanningUseCase,
+    private readonly findTrainingPlanningUseCase: FindTrainingPlanningUseCase,
   ) {}
 
   @Post()
@@ -53,8 +56,8 @@ export class TrainingPlanningController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('jwt'), Guards.roles)
   @Roles(UserRoleEnum.COACH)
-  async list(@Query() query: FindTrainingPlanningRequestDto) {
-    return await this.findTrainingPlanningUseCase.execute(query);
+  async list(@Query() query: ListTrainingPlanningRequestDto) {
+    return await this.listTrainingPlanningUseCase.execute(query);
   }
 
   @Put()
@@ -82,5 +85,13 @@ export class TrainingPlanningController {
   async delete(@Param() { uuid }: DeleteTrainingPlanningDto) {
     await this.deleteTrainingPlanningUseCase.execute(uuid);
     return { message: 'Planejamento do treino removido com sucesso!' };
+  }
+
+  @Get(':uuid')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard('jwt'), Guards.roles)
+  @Roles(UserRoleEnum.COACH)
+  async findByUuid(@Param() { uuid }: FindTrainingPlanningRequestDto) {
+    return this.findTrainingPlanningUseCase.execute(uuid);
   }
 }
