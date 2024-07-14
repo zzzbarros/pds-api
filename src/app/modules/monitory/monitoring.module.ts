@@ -15,10 +15,12 @@ import { TrainingPlanningModule } from '../training-planning/training-planning.m
 import { MonitoryPostgresRepository } from 'src/infra/databases/orms/prisma/postgres/repositories';
 import { WellBeingPostgresRepository } from 'src/infra/databases/orms/prisma/postgres/repositories/well-being.repository';
 import { MonitoryTokenPostgresRepository } from 'src/infra/databases/orms/prisma/postgres/repositories/monitory-token.repository';
+import { UnsubscribeModule } from '../unsubscribe/unsubscribe.module';
 
 @Module({
   controllers: [MonitoringController],
   imports: [
+    UnsubscribeModule,
     QueueModule,
     forwardRef(() => AthleteModule),
     forwardRef(() => TrainingModule),
