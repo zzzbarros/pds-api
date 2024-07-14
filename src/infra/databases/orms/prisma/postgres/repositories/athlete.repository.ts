@@ -40,10 +40,14 @@ export class AthletePostgresRepository implements IAthleteRepository {
     return new AthleteEntity(athlete);
   }
 
-  async findAll(query: { isEnabled: boolean }): Promise<AthleteEntity[]> {
+  async findAll(query: {
+    isEnabled: boolean;
+    not?: { emails: string[] };
+  }): Promise<AthleteEntity[]> {
     const athletes = await this.prismaService.athlete.findMany({
       where: {
         isEnabled: query.isEnabled,
+        email: { not: { in: query.not.emails } },
       },
     });
     return athletes.map((athlete) => new AthleteEntity(athlete));
