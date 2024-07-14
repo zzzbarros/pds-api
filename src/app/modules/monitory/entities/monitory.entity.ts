@@ -145,7 +145,7 @@ export class MonitoryEntity extends BaseEntity {
   }
 
   private calculateDeviation(weekTrainings: TrainingEntity[]): number {
-    if (weekTrainings.length === 0) return 0;
+    if (!weekTrainings.length) return 0;
 
     const mean = this.averageWeekLoad;
 

@@ -4,6 +4,7 @@ import {
   CreateTrainingUseCase,
   DeleteTrainingUseCase,
   FindTrainingUseCase,
+  ListTrainingUseCase,
   UpdateTrainingUseCase,
 } from './usecases';
 import { TrainingPostgresRepository } from 'src/infra/databases/orms/prisma/postgres/repositories/training.repository';
@@ -18,9 +19,10 @@ import { TrainingTypeModule } from '../training-type/training-type.module';
   controllers: [TrainingController],
   providers: [
     CreateTrainingUseCase,
-    FindTrainingUseCase,
+    ListTrainingUseCase,
     DeleteTrainingUseCase,
     UpdateTrainingUseCase,
+    FindTrainingUseCase,
     {
       provide: 'ITrainingRepository',
       useClass: TrainingPostgresRepository,
