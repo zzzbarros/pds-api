@@ -6,6 +6,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -15,6 +16,7 @@ import {
   CreateTrainingPlanningDto,
   DeleteTrainingPlanningDto,
   FindTrainingPlanningRequestDto,
+  FinishTrainingPlanningDto,
   UpdateTrainingPlanningDto,
 } from '../dtos';
 import { AuthGuard } from '@nestjs/passport';
@@ -23,6 +25,7 @@ import {
   CreateTrainingPlanningUseCase,
   DeleteTrainingPlanningUseCase,
   FindTrainingPlanningUseCase,
+  FinishTrainingPlanningUseCase,
   UpdateTrainingPlanningUseCase,
 } from '../usecases';
 import { Roles, UserRoleEnum } from 'src/app/shared';
@@ -34,10 +37,11 @@ export class TrainingPlanningController {
     private readonly updateTrainingPlanningUseCase: UpdateTrainingPlanningUseCase,
     private readonly findTrainingPlanningUseCase: FindTrainingPlanningUseCase,
     private readonly deleteTrainingPlanningUseCase: DeleteTrainingPlanningUseCase,
+    private readonly finishTrainingPlanningUseCase: FinishTrainingPlanningUseCase,
   ) {}
 
   @Post()
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.CREATED)
   @UseGuards(AuthGuard('jwt'), Guards.roles)
   @Roles(UserRoleEnum.COACH)
   async create(@Body() body: CreateTrainingPlanningDto) {
@@ -60,6 +64,15 @@ export class TrainingPlanningController {
   async update(@Body() body: UpdateTrainingPlanningDto) {
     await this.updateTrainingPlanningUseCase.execute(body);
     return { message: 'Planejamento do treino atualizado com sucesso!' };
+  }
+
+  @Patch(':uuid')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard('jwt'), Guards.roles)
+  @Roles(UserRoleEnum.COACH)
+  async finish(@Param() { uuid }: FinishTrainingPlanningDto) {
+    await this.finishTrainingPlanningUseCase.execute(uuid);
+    return { message: 'Planejamento do treino finalizado com sucesso!' };
   }
 
   @Delete(':uuid')

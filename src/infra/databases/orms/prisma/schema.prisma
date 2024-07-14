@@ -103,6 +103,7 @@ model TrainingPlanning {
   duration       Float
   pse            Float
   description    String?      @db.VarChar(255)
+  finished       Boolean      @default(false)
   createdAt      DateTime     @default(now()) @map("created_at")
   updatedAt      DateTime     @updatedAt @map("updated_at")
 

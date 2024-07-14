@@ -57,6 +57,7 @@ export class FindTrainingPlanningUseCase implements IBaseUseCase {
         date: planning.getDate(),
         duration: planning.getDuration(),
         pse: planning.getPSE(),
+        finished: planning.getFinished(),
         trainingType: {
           id: planning.getTrainingType().getUuid(),
           name: planning.getTrainingType().getName(),

@@ -19,6 +19,7 @@ export class TrainingPlanningRepository implements ITrainingPlanningRepository {
         duration: trainingPlanning.getDuration(),
         pse: trainingPlanning.getPSE(),
         description: trainingPlanning.getDescription(),
+        finished: trainingPlanning.getFinished()
       },
     });
   }
@@ -73,6 +74,7 @@ export class TrainingPlanningRepository implements ITrainingPlanningRepository {
         duration: trainingPlanning.getDuration(),
         pse: trainingPlanning.getPSE(),
         description: trainingPlanning.getDescription(),
+        finished: trainingPlanning.getFinished(),
       },
     });
   }
