@@ -40,7 +40,7 @@ export class AthleteController {
   ) {}
 
   @Post()
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.CREATED)
   @UseGuards(AuthGuard('jwt'), Guards.roles)
   @Roles(UserRoleEnum.COACH)
   async create(
