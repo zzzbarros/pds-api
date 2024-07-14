@@ -11,6 +11,7 @@ class TrainingPlanning {
   pse: number;
   description?: string;
   load: number;
+  finished: boolean;
 }
 
 export class FindTrainingPlanningRequestDto {

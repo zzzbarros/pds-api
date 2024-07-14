@@ -8,6 +8,7 @@ import {
 import type { IAthleteRepository } from '../../athlete';
 import type { IQueueRepository } from '../../queues';
 import type { IMonitoryTokenRepository } from '../repositories';
+import type { IUnsubscribeRepository } from '../../unsubscribe';
 
 @Injectable()
 export class SendWellBeingToAthletesUseCase implements IBaseUseCase {
@@ -18,10 +19,16 @@ export class SendWellBeingToAthletesUseCase implements IBaseUseCase {
     private readonly queueRepository: IQueueRepository,
     @Inject('IMonitoryTokenRepository')
     private readonly monitoryTokenRepository: IMonitoryTokenRepository,
+    @Inject('IUnsubscribeRepository')
+    private readonly unsubscribeRepository: IUnsubscribeRepository,
   ) {}
 
   async execute() {
-    const athletes = await this.athleteRepository.findAll({ isEnabled: true });
+    const unsubscribes = await this.unsubscribeRepository.findEmails();
+    const athletes = await this.athleteRepository.findAll({
+      isEnabled: true,
+      not: { emails: unsubscribes },
+    });
     if (!athletes.length) return;
 
     await this.monitoryTokenRepository.invalidateTokensByUserIds(

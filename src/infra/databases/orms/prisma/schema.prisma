@@ -2,6 +2,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -103,6 +107,7 @@ model TrainingPlanning {
   duration       Float
   pse            Float
   description    String?      @db.VarChar(255)
+  finished       Boolean      @default(false)
   createdAt      DateTime     @default(now()) @map("created_at")
   updatedAt      DateTime     @updatedAt @map("updated_at")
 
@@ -166,4 +171,12 @@ model WellBeingMonitoring {
 
   @@unique([athleteId, date])
   @@map("well_being_monitoring")
+}
+
+model Unsubscribes {
+  id          Int      @id @default(autoincrement())
+  uuid        String   @unique() @default(uuid()) @db.Uuid()
+  email       String   @unique() @db.VarChar(255)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 }

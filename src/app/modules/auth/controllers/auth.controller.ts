@@ -55,7 +55,7 @@ export class AuthController {
   }
 
   @Post('create-password')
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.CREATED)
   async createPassword(
     @Body() body: CreatePasswordDto,
   ): Promise<IBaseResponse> {
@@ -79,7 +79,7 @@ export class AuthController {
   }
 
   @Post('refresh-token')
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.CREATED)
   async getAccessToken(
     @Body() { refreshToken }: RefreshTokenRequestDto,
   ): Promise<RefreshTokenResponseDto> {

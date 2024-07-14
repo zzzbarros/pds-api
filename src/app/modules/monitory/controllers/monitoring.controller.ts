@@ -49,7 +49,7 @@ export class MonitoringController {
   }
 
   @Post('well-being')
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.CREATED)
   async captureAthleteWellBeing(@Body() body: CaptureAthleteWellBeingDto) {
     return await this.captureAthleteWellBeingUseCase.execute(body);
   }

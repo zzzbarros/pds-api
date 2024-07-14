@@ -13,6 +13,7 @@ import { TrainingPlanningModule } from './modules/training-planning/training-pla
 import { TrainingModule } from './modules/training/training.module';
 import { MonitoringModule } from './modules/monitory/monitoring.module';
 import { ScheduleModule } from './modules/schedule/cron.module';
+import { UnsubscribeModule } from './modules/unsubscribe/unsubscribe.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { ScheduleModule } from './modules/schedule/cron.module';
     TrainingPlanningModule,
     TrainingModule,
     MonitoringModule,
+    UnsubscribeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
