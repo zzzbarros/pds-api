@@ -173,7 +173,7 @@ export class MonitoryEntity extends BaseEntity {
   private calculateChronicLoad(previousMonitory: MonitoryEntity[]) {
     const numberOfWeeks = 4;
     const totalPreviousLoad = previousMonitory.reduce(
-      (acc, weekMonitory) => acc + weekMonitory.getAverageWeekLoad(),
+      (acc, weekMonitory) => acc + weekMonitory.getWeekLoad(),
       0,
     );
     if (!totalPreviousLoad) return 0;
@@ -181,7 +181,7 @@ export class MonitoryEntity extends BaseEntity {
   }
 
   private calculateChronicAcute() {
-    if (this.chronic === 0) return 0;
+    if (!this.chronic) return 0;
     const chronicAcute = this.acute / this.chronic;
     return parseFloat(chronicAcute.toFixed(1));
   }
