@@ -69,7 +69,7 @@ export class TrainingPlanningController {
     return { message: 'Planejamento do treino atualizado com sucesso!' };
   }
 
-  @Patch(':uuid')
+  @Patch(':uuid/finish')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('jwt'), Guards.roles)
   @Roles(UserRoleEnum.COACH)
