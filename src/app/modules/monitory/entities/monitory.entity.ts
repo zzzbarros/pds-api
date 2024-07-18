@@ -117,7 +117,10 @@ export class MonitoryEntity extends BaseEntity {
   ) {
     this.weekLoad = this.calculateWeekLoad(weekTrainings);
     this.averageWeekLoad = this.calculateAverageWeekLoad();
-    this.deviation = this.calculateDeviation(weekTrainings);
+    this.deviation = this.calculateDeviation(
+      weekTrainings,
+      this.averageWeekLoad,
+    );
     this.monotony = this.calculateMonotony();
     this.chronic = this.calculateChronicLoad(previousMonitory);
     this.acute = this.weekLoad;
@@ -144,10 +147,13 @@ export class MonitoryEntity extends BaseEntity {
     return parseFloat(average.toFixed(1));
   }
 
-  private calculateDeviation(weekTrainings: TrainingEntity[]): number {
-    if (!weekTrainings.length) return 0;
+  private calculateDeviation(
+    weekTrainings: TrainingEntity[],
+    averageWeekLoad: number,
+  ): number {
+    if (!weekTrainings.length) return 1000;
 
-    const mean = this.averageWeekLoad;
+    const mean = averageWeekLoad;
 
     const squaredDifferences = weekTrainings.map((training) => {
       const load = training.getLoad();
@@ -159,14 +165,17 @@ export class MonitoryEntity extends BaseEntity {
       0,
     );
 
+    if (weekTrainings.length <= 1) return 1000;
+
     const variance = sumSquaredDifferences / (weekTrainings.length - 1);
 
-    return Math.sqrt(variance);
+    const value = Math.sqrt(variance);
+
+    return !isFinite(value) && value > 0 ? value : 1000;
   }
 
   private calculateMonotony() {
-    const safeDeviation = this.deviation > 0 ? this.deviation : 1000;
-    const monotony = this.averageWeekLoad / safeDeviation;
+    const monotony = this.averageWeekLoad / this.deviation;
     return parseFloat(monotony.toFixed(1));
   }
 
