@@ -19,6 +19,12 @@ export class MonitoryPostgresRepository implements IMonitoryRepository {
       deviation: entity.getDeviation(),
     };
     await this.prismaService.weeklyMonitoring.upsert({
+      where: {
+        week: entity.getWeek(),
+        athleteId: entity.getAthleteId(),
+        startDate: entity.getStartDate(),
+        endDate: entity.getEndDate(),
+      },
       create: {
         ...data,
         week: entity.getWeek(),
@@ -31,10 +37,6 @@ export class MonitoryPostgresRepository implements IMonitoryRepository {
         },
       },
       update: data,
-      where: {
-        week: entity.getWeek(),
-        athleteId: entity.getAthleteId(),
-      },
     });
   }
 
