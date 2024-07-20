@@ -60,31 +60,31 @@ export class MonotonyMonitoringUseCase implements IBaseUseCase {
       weeks,
     );
 
-    return weeksMonitory.reduce(
-      (data, week) => {
-        const weekStart = week.getStartDate().toLocaleDateString();
-        const weekEnd = week.getEndDate().toLocaleDateString();
-
-        data.week.push(`${weekStart} - ${weekEnd}`);
-        data.strain.push(week.getStrain());
-        data.monotony.push(week.getMonotony());
-        data.acuteChronicLoadRatio.push(week.getChronicAcute());
-        data.load.performed.push(week.getWeekLoad());
-        data.load.planned.push(plannedLoads[week.getWeek()]);
-
-        return data;
+    const defaultValues = {
+      week: [],
+      strain: [],
+      monotony: [],
+      acuteChronicLoadRatio: [],
+      load: {
+        performed: [],
+        planned: [],
       },
-      {
-        week: [],
-        strain: [],
-        monotony: [],
-        acuteChronicLoadRatio: [],
-        load: {
-          performed: [],
-          planned: [],
-        },
-      },
-    );
+      risks: weeksMonitory.at(-1)?.getRiskAssessments(),
+    };
+
+    return weeksMonitory.reduce((data, week) => {
+      const weekStart = week.getStartDate().toLocaleDateString();
+      const weekEnd = week.getEndDate().toLocaleDateString();
+
+      data.week.push(`${weekStart} - ${weekEnd}`);
+      data.strain.push(week.getStrain());
+      data.monotony.push(week.getMonotony());
+      data.acuteChronicLoadRatio.push(week.getChronicAcute());
+      data.load.performed.push(week.getWeekLoad());
+      data.load.planned.push(plannedLoads[week.getWeek()]);
+
+      return data;
+    }, defaultValues);
   }
 
   private calculatePlannedLoadsPerWeek(

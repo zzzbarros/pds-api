@@ -22,7 +22,9 @@ export class UpdateWeekLoadListener {
   @OnEvent(EventsEnum.UPDATE_WEEK_LOAD, { async: true })
   async updateWeekLoad({ athleteId, date }: UpdateWeekLoadDto) {
     try {
-      const { firstDay, lastDay, week } = getFirstAndLastDayOfWeek(date);
+      const { firstDay, lastDay, week } = getFirstAndLastDayOfWeek(
+        new Date(date),
+      );
       const previousWeekDates = getLastFourWeeksFromDate(date);
 
       const dates = { startDate: firstDay, endDate: lastDay };
