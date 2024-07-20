@@ -199,4 +199,108 @@ export class MonitoryEntity extends BaseEntity {
     const strain = this.acute * this.monotony;
     return parseFloat(strain.toFixed(1));
   }
+
+  private validateMonotony() {
+    const monotony = this.monotony;
+    if (!monotony) return;
+    if (monotony >= 1.5 && monotony <= 2) {
+      // return;
+      return {
+        warning: false,
+        title: 'Monotonia Moderada (1.5 - 2)',
+        description:
+          'Indica uma boa variação na carga de treinamento, promovendo adaptações enquanto minimiza o risco de lesões.',
+      };
+    }
+    if (monotony < 1.5) {
+      return {
+        warning: true,
+        title: 'Monotonia Baixa (< 1.5)',
+        description:
+          'Pode ser boa para evitar tédio e lesões, mas se a variação for excessiva, pode não permitir adaptações adequadas.',
+      };
+    }
+    if (monotony > 2) {
+      return {
+        warning: true,
+        title: 'Monotonia Alta (> 2)',
+        description:
+          'Pode levar ao overtraining e aumentar o risco de lesões devido à pouca variação na carga de treinamento.',
+      };
+    }
+  }
+
+  private validateStrain() {
+    const strain = this.strain;
+    if (!strain) return;
+
+    if (strain >= 2000 && strain <= 4000) {
+      // return;
+      return {
+        warning: false,
+        title: 'Tensão Moderada (2000 - 4000)',
+        description:
+          'Uma carga de treinamento adequada para promover adaptações sem causar overtraining.',
+      };
+    }
+
+    if (strain < 2000) {
+      return {
+        warning: true,
+        title: 'Tensão Baixa (< 2000)',
+        description:
+          'Pode não ser suficiente para provocar adaptações significativas no atleta.',
+      };
+    }
+
+    if (strain > 4000) {
+      return {
+        warning: true,
+        title: 'Tensão Alta (> 4000)',
+        description:
+          'Pode indicar um risco elevado de overtraining e lesões devido à alta carga de treinamento.',
+      };
+    }
+  }
+
+  private validateChronicAcute() {
+    const chronicAcute = this.chronicAcute;
+    if (!chronicAcute) {
+      return;
+    }
+
+    if (chronicAcute <= 1.3) {
+      // return;
+      return {
+        warning: false,
+        title: 'Razão Aguda-Crônica Ótima (0.8 - 1.3)',
+        description:
+          'Indica um equilíbrio adequado entre a carga de treinamento atual e a capacidade de recuperação do atleta.',
+      };
+    }
+    if (chronicAcute < 0.8) {
+      return {
+        warning: true,
+        title: 'Razão Aguda-Crônica Baixa (< 0.8)',
+        description:
+          'Pode indicar que o atleta não está treinando o suficiente para provocar adaptações.',
+      };
+    }
+    if (chronicAcute > 1.3) {
+      return {
+        warning: true,
+        title: 'Razão Aguda-Crônica Alta (> 1.3)',
+        description:
+          'Pode indicar um risco elevado de overtraining e lesões devido à alta carga de treinamento recente.',
+      };
+    }
+  }
+
+  public getRiskAssessments() {
+    return [
+      this.validateChronicAcute(),
+      this.validateMonotony(),
+      this.validateStrain(),
+    ];
+  }
 }
