@@ -28,7 +28,13 @@ export class CaptureAthleteWellBeingUseCase implements IBaseUseCase {
     const today = new Date();
     const validateDate = today < findToken.getExpiresIn();
 
-    if (!validateDate || !findToken.getIsValid())
+    if (!validateDate)
+      throw new BadRequestException({
+        title: 'Token expirado.',
+        message: 'Verifique e tente novamente...',
+      });
+
+    if (!findToken.getIsValid())
       throw new BadRequestException({
         title: 'Token inválido.',
         message: 'Verifique e tente novamente...',

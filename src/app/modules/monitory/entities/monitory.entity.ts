@@ -269,7 +269,7 @@ export class MonitoryEntity extends BaseEntity {
       return;
     }
 
-    if (chronicAcute <= 1.3) {
+    if (chronicAcute >= 0.8 && chronicAcute <= 1.3) {
       // return;
       return {
         warning: false,

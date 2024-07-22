@@ -32,15 +32,15 @@ export class LoginUseCase implements IBaseUseCase {
   private async validateUser(email: string) {
     const user = await this.userRepository.findByEmail(email);
 
-    const message = 'Verifique e tente novamente!';
 
     if (!user) {
-      const title = 'Credenciais inválidas!';
-      throw new BadRequestException({ title, message });
+     this.unauthenticated();
     }
 
     if (!user.getIsEnabled()) {
       const title = 'Usuário desabilitado!';
+      const message = 'Verifique e tente novamente! Caso o problema persista contate o administrador...';
+      
       throw new ForbiddenException({ title, message });
     }
 
@@ -54,10 +54,14 @@ export class LoginUseCase implements IBaseUseCase {
     );
 
     if (!valid) {
-      throw new BadRequestException({
-        title: 'Não foi possível fazer o login!',
-        message: 'Credenciais inválidas.',
-      });
+      this.unauthenticated()
     }
+  }
+
+  private unauthenticated() {
+    throw new BadRequestException({
+      title: 'Não foi possível fazer o login!',
+      message: 'Credenciais inválidas.',
+    });
   }
 }

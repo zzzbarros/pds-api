@@ -45,7 +45,14 @@ export class CreatePasswordUseCase implements IBaseUseCase {
       });
 
     const validateDate = today < findToken.getExpiresIn();
-    if (!validateDate || !findToken.getIsValid())
+
+    if (!validateDate)
+      throw new BadRequestException({
+        title: 'Token expirado.',
+        message: 'Verifique e tente novamente...',
+      });
+
+    if (!findToken.getIsValid())
       throw new BadRequestException({
         title: 'Token inválido.',
         message: 'Verifique e tente novamente...',
@@ -79,7 +86,7 @@ export class CreatePasswordUseCase implements IBaseUseCase {
       throw new BadRequestException({
         title: 'Senha inválida.',
         message:
-          'A senha deve conter no mínimo 8 caracteres, sendo letras, números e caracteres especiais. Verifique e tente novamente...',
+          'A senha deve conter no mínimo 8 caracteres, sendo ao menos letras maiúscula e minúscula (no mínimo uma de cada), números e caracteres especiais. Verifique e tente novamente...',
       });
     }
   }
